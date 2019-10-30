@@ -1,10 +1,15 @@
 package com.es.phoneshop.model.product;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface ProductDao {
-    Product getProduct(Long id);
+    Optional<Product> getProduct(UUID id);
+
     List<Product> findProducts();
+
     void save(Product product);
-    void delete(Long id);
+
+    void delete(UUID id);
 }

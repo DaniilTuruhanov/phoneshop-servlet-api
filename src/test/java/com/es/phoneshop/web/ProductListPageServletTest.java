@@ -1,6 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +44,7 @@ public class ProductListPageServletTest {
         servlet.init();
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
-        when(request.getAttribute("products")).thenReturn(arrayListProductDao.findProducts());
-        verify(request).setAttribute("products", arrayListProductDao.findProducts());
+        when(request.getAttribute("products")).thenReturn(arrayListProductDao.findProducts(null, null, null));
+        verify(request).setAttribute("products", arrayListProductDao.findProducts(null, null, null));
     }
 }

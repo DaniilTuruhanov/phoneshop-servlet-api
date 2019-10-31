@@ -3,10 +3,9 @@ package com.es.phoneshop.model.product;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Product {
-    private volatile UUID id;
+    private volatile Long id;
     private String description;
     private BigDecimal price;
     private Currency currency;
@@ -16,8 +15,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = UUID.randomUUID();
+    public Product(Long id, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        this.id = id;
         this.description = description;
         this.price = price;
         this.currency = currency;
@@ -25,12 +24,16 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public UUID getId() {
-        return id;
+    public Long getId() {
+        synchronized (id) {
+            return id;
+        }
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setId(Long id) {
+        synchronized (this.id) {
+            this.id = id;
+        }
     }
 
     public String getDescription() {
@@ -75,20 +78,13 @@ public class Product {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return stock == product.stock &&
-                Objects.equals(id, product.id) &&
-                Objects.equals(description, product.description) &&
-                Objects.equals(price, product.price) &&
-                Objects.equals(currency, product.currency) &&
-                Objects.equals(imageUrl, product.imageUrl);
+        return Objects.equals(id, product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, price, currency, stock, imageUrl);
+        return Objects.hash(id);
     }
 
     @Override

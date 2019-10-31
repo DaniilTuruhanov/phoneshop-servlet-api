@@ -4,9 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Currency;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,33 +19,33 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void testFindProductsHaveSomeResults() {
-        assertTrue(!productDao.findProducts().isEmpty());
+        assertTrue(!productDao.findProducts(null, null, null).isEmpty());
     }
 
     @Test
     public void testGetProduct() {
-        assertEquals(productDao.getProduct(productDao.findProducts().get(0).getId()).get().getId(), productDao.findProducts().get(0).getId());
+        assertEquals(productDao.getProduct(1L).get(), productDao.findProducts(null, null, null).get(0));
     }
 
     @Test
     public void testFindProducts() {
-        List<Product> productList = new ArrayList<>();
-        Currency usd = Currency.getInstance("USD");
-        assertTrue(!productDao.findProducts().stream().filter(product -> product.getPrice() == null || product.getStock() <= 0).findAny().isPresent());
+        assertTrue(!productDao.findProducts(null, null, null).stream()
+                .filter(product -> product.getPrice() == null || product.getStock() <= 0)
+                .findAny().isPresent());
     }
 
     @Test
     public void testSaveProducts() {
         Currency usd = Currency.getInstance("USD");
-        Product product = new Product("Nokia 3521", new BigDecimal(200), usd, 300, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+        Product product = new Product(14L, "Nokia 3521", new BigDecimal(200), usd, 300, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
-        assertEquals(product, productDao.findProducts().get(productDao.findProducts().size() - 1));
+        assertEquals(product, productDao.findProducts(null, null, null).get(productDao.findProducts(null, null, null).size() - 1));
     }
 
     @Test
     public void testDeleteProduct() {
-        Product product = productDao.findProducts().get(0);
+        Product product = productDao.findProducts(null, null, null).get(0);
         productDao.delete(product.getId());
-        assertTrue(productDao.findProducts().lastIndexOf(product) == -1);
+        assertTrue(productDao.findProducts(null, null, null).lastIndexOf(product) == -1);
     }
 }

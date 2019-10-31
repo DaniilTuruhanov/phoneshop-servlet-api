@@ -2,14 +2,13 @@ package com.es.phoneshop.model.product;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface ProductDao {
-    Optional<Product> getProduct(UUID id);
+    Optional<Product> getProduct(Long id);
 
-    List<Product> findProducts();
+    List<Product> findProducts(String query, String sortByField, String comparing);
 
     void save(Product product);
 
-    void delete(UUID id);
+    void delete(Long id);
 }

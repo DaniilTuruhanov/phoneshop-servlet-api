@@ -1,39 +1,40 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Objects;
 
 public class Product {
-    private volatile Long id;
+    private String id;
     private String description;
     private BigDecimal price;
+    public ArrayList<PriceRecord> priceHistory;
     private Currency currency;
     private int stock;
     private String imageUrl;
 
-    public Product() {
-    }
+    public Product() { }
 
-    public Product(Long id, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(String id, String description, BigDecimal price, Currency currency, int stock, ArrayList<PriceRecord> priceRecords, String imageUrl) {
         this.id = id;
         this.description = description;
         this.price = price;
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        synchronized (id) {
-            return id;
+        this.priceHistory = new ArrayList<>();
+        for (PriceRecord s : priceRecords) {
+            this.priceHistory.add(s);
         }
     }
 
-    public void setId(Long id) {
-        synchronized (this.id) {
-            this.id = id;
-        }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -76,6 +77,14 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public ArrayList<PriceRecord> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(ArrayList<PriceRecord> priceHistory) {
+        this.priceHistory = priceHistory;
+    }
+
     @Override
     public boolean equals(Object o) {
         Product product = (Product) o;
@@ -87,15 +96,5 @@ public class Product {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", currency=" + currency +
-                ", stock=" + stock +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
+
 }

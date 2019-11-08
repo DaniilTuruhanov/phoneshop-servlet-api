@@ -1,6 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,13 +36,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 
-public class ProductListPageServletTest {
-    private final static String path = "/WEB-INF/pages/productList.jsp";
+public class ProductDetailPageServletTest {
+    private final static String path = "/WEB-INF/pages/productPage.jsp";
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -49,7 +51,7 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
 
-    private ProductListPageServlet servlet = new ProductListPageServlet();
+    private ProductDetailPageServlet servlet = new ProductDetailPageServlet();
     @Mock
     private ProductService productService;
 
@@ -59,20 +61,16 @@ public class ProductListPageServletTest {
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
-        String field = "fieldValue";
-        String query = "queryValue";
-        String upOrDown = "upOrDownValue";
-        List<Product> products = Collections.singletonList(new Product());
+    public void testDoGet() throws ServletException, IOException, ProductNotFoundException {
+        String idProduct = "idProductValue";
+        Product product = new Product();
         servlet.setProductService(productService);
 
-        when(request.getParameter("query")).thenReturn(query);
-        when(request.getParameter("order")).thenReturn(field);
-        when(request.getParameter("sort")).thenReturn(upOrDown);
-        when(productService.findProductsFromDao(query, field, upOrDown)).thenReturn(products);
+        when(request.getRequestURI()).thenReturn(idProduct);
+        when(productService.getProductFromDao(idProduct.substring(idProduct.lastIndexOf("/") + 1))).thenReturn(product);
 
         servlet.doGet(request, response);
 
-        verify(request).setAttribute("products", products);
+        verify(request).setAttribute("product", product);
     }
 }

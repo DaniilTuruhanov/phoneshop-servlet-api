@@ -27,8 +27,12 @@ td {
 img.product-tile {
   max-width: 64px;
 }
+img.productPage-tile {
+  max-width: 200px;
+}
 
-/* Page specific styles */
+temp:active{
+font-weight: bold;
+}
 body.product-list {
-
 }

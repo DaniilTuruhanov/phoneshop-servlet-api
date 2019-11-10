@@ -1,27 +1,25 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Currency;
 
 public class PriceRecord {
-    private Calendar data;
+    private LocalDate data;
     private BigDecimal price;
     private Currency currency;
 
-    public PriceRecord(Calendar data, BigDecimal price, Currency currency) {
+    public PriceRecord(LocalDate data, BigDecimal price, Currency currency) {
         this.data = data;
         this.price = price;
         this.currency = currency;
     }
 
-    public Calendar getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Calendar data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 

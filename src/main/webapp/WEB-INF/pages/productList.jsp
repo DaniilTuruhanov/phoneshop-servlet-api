@@ -23,14 +23,14 @@
                 </td>
                 <td>
                     Description
-                    <span id="DescribeUP" href="products?query=${param.query}&sort=UP&order=DESCRIPTION">↑</span>
-                    <span id="DescribeDOWN" href="products?query=${param.query}&sort=DOWN&order=DESCRIPTION">↓</span>
+                    <span id="DescribeUP" href="products/sort?query=${param.query}&sort=UP&order=DESCRIPTION">↑</span>
+                    <span id="DescribeDOWN" href="products/sort?query=${param.query}&sort=DOWN&order=DESCRIPTION">↓</span>
 
                 </td>
                 <td class="price">
                     Price
-                    <span id="PriceUP" href="products?query=${param.query}&sort=UP&order=PRICE">↑</span>
-                    <span id="PriceDOWN" href="products?query=${param.query}&sort=DOWN&order=PRICE">↓</span>
+                    <span id="PriceUP" href="products/sort?query=${param.query}&sort=UP&order=PRICE">↑</span>
+                    <span id="PriceDOWN" href="products/sort?query=${param.query}&sort=DOWN&order=PRICE">↓</span>
                 </td>
             </tr>
             </thead>
@@ -47,8 +47,9 @@
                             let a='<h1>PriceHistory</h1>'+
                             '<h2>${product.description}</h2>'+
                             '<c:forEach var="priceRecords" items="${product.priceHistory}">'+
-                            '<p><fmt:formatDate pattern = "dd MMM yyyy" value="${priceRecords.data.getTime()}"/>- <fmt:formatNumber value="${priceRecords.price}" type="currency" currencySymbol="${priceRecords.currency.symbol}"/> </p>'+
+                            '<p> ${priceRecords.data}- ${priceRecords.price}  ${priceRecords.currency.symbol} </p>'+
                             '</c:forEach>';
+                            console.log(a);
                             return document.querySelector('.price-history').innerHTML!==a?
                             document.querySelector('.price-history').innerHTML=a:
                             document.querySelector('.price-history').innerHTML='';
@@ -72,7 +73,7 @@
                }
         function sortProducts(url) {
             fetch('/phoneshop_servlet_api_war_exploded/' + url, {
-                method: 'POST'
+                method: 'GET'
             }).then(function (res) {
                 return res.json();
             }).then(function (res) {

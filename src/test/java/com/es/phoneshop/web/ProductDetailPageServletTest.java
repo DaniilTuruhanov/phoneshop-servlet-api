@@ -44,16 +44,20 @@ import static org.mockito.Mockito.when;
 
 public class ProductDetailPageServletTest {
     private final static String path = "/WEB-INF/pages/productPage.jsp";
+
     @Mock
     private HttpServletRequest request;
+
     @Mock
     private HttpServletResponse response;
+
     @Mock
     private RequestDispatcher requestDispatcher;
 
-    private ProductDetailPageServlet servlet = new ProductDetailPageServlet();
     @Mock
     private ProductService productService;
+
+    private ProductDetailPageServlet servlet = new ProductDetailPageServlet();
 
     @Before
     public void setup() {
@@ -67,7 +71,7 @@ public class ProductDetailPageServletTest {
         servlet.setProductService(productService);
 
         when(request.getRequestURI()).thenReturn(idProduct);
-        when(productService.getProductFromDao(idProduct.substring(idProduct.lastIndexOf("/") + 1))).thenReturn(product);
+        when(productService.getProduct(idProduct.substring(idProduct.lastIndexOf("/") + 1))).thenReturn(product);
 
         servlet.doGet(request, response);
 

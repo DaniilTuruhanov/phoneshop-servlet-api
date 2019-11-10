@@ -1,5 +1,3 @@
-<%@ page contentType="text/html;charset=utf-8" %>
-<!-- как использовать русский текст-->
 <html>
 <head>
     <title>$Title$</title>

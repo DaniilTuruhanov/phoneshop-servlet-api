@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Product {
     private String id;
@@ -14,7 +15,7 @@ public class Product {
     private int stock;
     private String imageUrl;
 
-    public Product() { }
+    public Product(){}
 
     public Product(String id, String description, BigDecimal price, Currency currency, int stock, ArrayList<PriceRecord> priceRecords, String imageUrl) {
         this.id = id;
@@ -95,6 +96,4 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
 }

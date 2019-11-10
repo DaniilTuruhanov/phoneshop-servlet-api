@@ -4,47 +4,46 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProductService {
-    private static volatile ArrayListProductDao arrayListProductDao;
+    private static ArrayListProductDao arrayListProductDao;
 
-    private static volatile ProductService productServiceDao;
+    private static ProductService productService;
 
     private ProductService() {
         arrayListProductDao = arrayListProductDao.getInstance();
     }
 
     public static ProductService getInstance() {
-        if (productServiceDao == null) {
+        if (productService == null) {
             synchronized (ProductService.class) {
-                if (productServiceDao == null)
-                    productServiceDao = new ProductService();
+                if (productService == null)
+                    productService = new ProductService();
             }
         }
-        return productServiceDao;
+        return productService;
     }
 
-    public Product getProductFromDao(String id) throws ProductNotFoundException {
+    public Product getProduct(String id) throws ProductNotFoundException {
         Optional<Product> product = arrayListProductDao.getProduct(id);
         if (product.isPresent()) {
             return product.get();
-        }
-        else {
+        } else {
             throw new ProductNotFoundException();
         }
     }
 
-    public List<Product> findProductsFromDao(String query, String sortByField, String comparing) {
+    public List<Product> findProducts(String query, String sortByField, String comparing) {
         return arrayListProductDao.findProducts(query, sortByField, comparing);
     }
 
-    public List<Product> findProductsFromDao() {
+    public List<Product> findProducts() {
         return arrayListProductDao.findProducts(null, null, null);
     }
 
-    public void saveFromDao(Product product) {
+    public void save(Product product) {
         arrayListProductDao.save(product);
     }
 
-    public void deleteFromDao(String id) {
+    public void delete(String id) {
         arrayListProductDao.delete(id);
     }
 
@@ -54,13 +53,5 @@ public class ProductService {
 
     public void setProductDao(ArrayListProductDao productDao) {
         this.arrayListProductDao = productDao;
-    }
-
-    public static ProductService getProductServiceDao() {
-        return productServiceDao;
-    }
-
-    public static void setProductServiceDao(ProductService productServiceDao) {
-        ProductService.productServiceDao = productServiceDao;
     }
 }

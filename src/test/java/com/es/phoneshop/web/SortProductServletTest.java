@@ -2,46 +2,27 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductService;
-import org.junit.Before;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.PrintWriter;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 
-public class ProductListPageServletTest {
-    private final static String path = "/WEB-INF/pages/productList.jsp";
+public class SortProductServletTest {
 
     @Mock
     private HttpServletRequest request;
@@ -55,30 +36,33 @@ public class ProductListPageServletTest {
     @Mock
     private ProductService productService;
 
-    private ProductListPageServlet servlet = new ProductListPageServlet();
+    @Mock
+    private PrintWriter printWriter;
 
+    private SortProductServlet servlet = new SortProductServlet();
 
-    @Before
-    public void setup() {
-        when(request.getRequestDispatcher(path)).thenReturn(requestDispatcher);
-    }
+    private ObjectMapper obj = new ObjectMapper();
+
+    private List<Product> products = Collections.singletonList(new Product());
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         servlet.setProductService(productService);
-
         String field = "fieldValue";
         String query = "queryValue";
         String upOrDown = "upOrDownValue";
-        List<Product> products = Collections.singletonList(new Product());
 
         when(request.getParameter("query")).thenReturn(query);
         when(request.getParameter("order")).thenReturn(field);
         when(request.getParameter("sort")).thenReturn(upOrDown);
         when(productService.findProducts(query, field, upOrDown)).thenReturn(products);
+        when(response.getWriter()).thenReturn(printWriter);
 
         servlet.doGet(request, response);
 
-        verify(request).setAttribute("products", products);
+        verify(response).setContentType("application/json");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(printWriter).print((obj).writeValueAsString(products));
+        verify(printWriter).flush();
     }
 }

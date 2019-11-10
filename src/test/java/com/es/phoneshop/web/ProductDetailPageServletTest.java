@@ -65,7 +65,7 @@ public class ProductDetailPageServletTest {
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException, ProductNotFoundException {
+    public void setAttributeWhenProductDetailPageServletDoGet() throws ServletException, IOException, ProductNotFoundException {
         String idProduct = "idProductValue";
         Product product = new Product();
         servlet.setProductService(productService);

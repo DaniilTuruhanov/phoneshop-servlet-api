@@ -46,7 +46,7 @@ public class SortProductServletTest {
     private List<Product> products = Collections.singletonList(new Product());
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void parseToJsonWhenSortProductServletDoGet() throws ServletException, IOException {
         servlet.setProductService(productService);
         String field = "fieldValue";
         String query = "queryValue";

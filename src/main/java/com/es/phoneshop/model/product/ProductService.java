@@ -14,9 +14,8 @@ public class ProductService {
 
     public static ProductService getInstance() {
         if (productService == null) {
-            synchronized (ProductService.class) {
-                if (productService == null)
-                    productService = new ProductService();
+            if (productService == null) {
+                productService = new ProductService();
             }
         }
         return productService;

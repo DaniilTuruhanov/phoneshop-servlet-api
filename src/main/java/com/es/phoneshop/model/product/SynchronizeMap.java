@@ -6,14 +6,13 @@ import java.util.Map;
 public class SynchronizeMap {
     private Map<String, Object> uniqueObject = new HashMap<>();
 
-    public String findKey(String id) {
+    public Object findKey(String id) {
         if (uniqueObject.containsKey(id)) {
-            return id;
+            return uniqueObject.get(id);
         } else {
-            Product product = new Product();
-            product.setId(id);
-            uniqueObject.put(product.getId(), product);
-            return product.getId();
+            Object object = new Object();
+            uniqueObject.put(id, object);
+            return object;
         }
     }
 }

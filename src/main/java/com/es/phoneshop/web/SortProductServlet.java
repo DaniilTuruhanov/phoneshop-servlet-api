@@ -22,14 +22,17 @@ public class SortProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper obj = new ObjectMapper();
         String field = req.getParameter("order");
         String upOrDown = req.getParameter("sort");
         String query = req.getParameter("query");
+
         List<Product> findProducts = productService.findProducts(query, field, upOrDown);
-        ObjectMapper obj = new ObjectMapper();
         PrintWriter printWriter=resp.getWriter();
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+
         printWriter.print(obj.writeValueAsString(findProducts));
         printWriter.flush();
     }

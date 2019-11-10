@@ -41,11 +41,38 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     private boolean containsAll(Product product, String query) {
+        List<String> queryList = Arrays.asList(query.trim().split(" "));
+        return queryList.stream()
+                .anyMatch(queryPart -> Arrays.asList(product.getDescription().split(" ")).contains(queryPart));
+    }
+
+    public List<Product> findProducts() {
         synchronized (this) {
-            List<String> queryList = Arrays.asList(query.trim().split(" "));
-            return queryList.stream()
-                    .anyMatch(queryPart -> Arrays.asList(product.getDescription().split(" ")).contains(queryPart));
+            return productList.stream()
+                    .filter(product -> product.getPrice() != null && product.getStock() > 0)
+                    .collect(Collectors.toList());
         }
+    }
+
+    private List<Product> sortProducts(List<Product> productList, String query, String sortByField, String upOrDown) {
+        return productList.stream()
+                .filter(product -> query == null || query.trim().equals("") || containsAll(product, query))
+                .sorted((product1, product2) -> {
+                    if (sortByField == null || upOrDown == null) {
+                        return 0;
+                    }
+                    if (sortByField.equals("DESCRIPTION") && upOrDown.equals("UP")) {
+                        return product1.getDescription().compareTo(product2.getDescription());
+                    } else if (sortByField.equals("DESCRIPTION") && upOrDown.equals("DOWN")) {
+                        return product2.getDescription().compareTo(product1.getDescription());
+                    } else if (sortByField.equals("PRICE") && upOrDown.equals("UP")) {
+                        return product1.getPrice().compareTo(product2.getPrice());
+                    } else if (sortByField.equals("PRICE") && upOrDown.equals("DOWN")) {
+                        return product2.getPrice().compareTo(product1.getPrice());
+                    }
+                    return 0;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -60,35 +87,12 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public List<Product> findProducts(String query, String sortByField, String upOrDown) {
         productList = findProducts();
-        return productList.stream()
-                .filter(product -> query == null || query.trim().equals("") || containsAll(product, query))
-                .sorted((product1, product2) -> {
-                    if (sortByField == null || upOrDown == null)
-                        return 0;
-                    if (sortByField.equals("DESCRIPTION") && upOrDown.equals("UP"))
-                        return product1.getDescription().compareTo(product2.getDescription());
-                    else if (sortByField.equals("DESCRIPTION") && upOrDown.equals("DOWN"))
-                        return product2.getDescription().compareTo(product1.getDescription());
-                    else if (sortByField.equals("PRICE") && upOrDown.equals("UP"))
-                        return product1.getPrice().compareTo(product2.getPrice());
-                    else if (sortByField.equals("PRICE") && upOrDown.equals("DOWN"))
-                        return product2.getPrice().compareTo(product1.getPrice());
-                    return 0;
-                })
-                .collect(Collectors.toList());
-    }
-
-    public List<Product> findProducts() {
-        synchronized (this) {
-            return productList.stream()
-                    .filter(product -> product.getPrice() != null && product.getStock() > 0)
-                    .collect(Collectors.toList());
-        }
+        return sortProducts(productList, query, sortByField, upOrDown);
     }
 
     @Override
     public void save(Product product) {
-        synchronized (new SynchronizeMap()) {
+        synchronized (new SynchronizeMap().findKey(product.getId())) {
             if (product.getId() == null) {
                 product.setId(UUID.randomUUID().toString());
                 productList.add(product);

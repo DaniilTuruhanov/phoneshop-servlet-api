@@ -89,7 +89,7 @@ public class Product {
     @Override
     public boolean equals(Object o) {
         Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        return (this.id==product.getId());
     }
 
     @Override

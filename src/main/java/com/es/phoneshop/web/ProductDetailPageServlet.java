@@ -20,6 +20,7 @@ public class ProductDetailPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idProduct = req.getRequestURI();
+
         try {
             req.setAttribute("product", productService.getProduct(idProduct.substring(idProduct.lastIndexOf("/") + 1)));
             req.getRequestDispatcher("/WEB-INF/pages/productPage.jsp").forward(req, resp);

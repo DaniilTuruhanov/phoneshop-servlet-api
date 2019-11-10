@@ -64,7 +64,7 @@ public class ProductListPageServletTest {
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void setAttributeWhenProductListPageServletDoGet() throws ServletException, IOException {
         servlet.setProductService(productService);
 
         String field = "fieldValue";

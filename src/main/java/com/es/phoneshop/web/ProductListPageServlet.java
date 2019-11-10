@@ -21,6 +21,7 @@ public class ProductListPageServlet extends HttpServlet {
         String field = request.getParameter("order");
         String upOrDown = request.getParameter("sort");
         String query = request.getParameter("query");
+
         request.setAttribute("products", productService.findProducts(query, field, upOrDown));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }

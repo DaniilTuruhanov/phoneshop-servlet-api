@@ -1,6 +1,7 @@
 package sampledata;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -8,13 +9,14 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionBindingEvent;
+import java.awt.*;
 
 public class ProductDemodataServletContextListener implements ServletContextListener,
         HttpSessionListener, HttpSessionAttributeListener {
-    private static ArrayListProductDao arrayListProductDao;
 
     public void contextInitialized(ServletContextEvent sce) {
-        arrayListProductDao = arrayListProductDao.getInstance();
+        ArrayListProductDao.getInstance();
+        ProductService.getInstance();
     }
 
     public void contextDestroyed(ServletContextEvent sce) {

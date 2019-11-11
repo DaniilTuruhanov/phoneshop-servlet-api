@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionBindingEvent;
-import java.awt.*;
 
 public class ProductDemodataServletContextListener implements ServletContextListener,
         HttpSessionListener, HttpSessionAttributeListener {

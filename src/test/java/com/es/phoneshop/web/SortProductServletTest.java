@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,9 +28,6 @@ public class SortProductServletTest {
 
     @Mock
     private HttpServletResponse response;
-
-    @Mock
-    private RequestDispatcher requestDispatcher;
 
     @Mock
     private ProductService productService;

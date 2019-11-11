@@ -15,7 +15,8 @@ public class Product {
     private int stock;
     private String imageUrl;
 
-    public Product(){}
+    public Product() {
+    }
 
     public Product(String id, String description, BigDecimal price, Currency currency, int stock, ArrayList<PriceRecord> priceRecords, String imageUrl) {
         this.id = id;
@@ -89,7 +90,7 @@ public class Product {
     @Override
     public boolean equals(Object o) {
         Product product = (Product) o;
-        return (this.id==product.getId());
+        return (this.id == product.getId());
     }
 
     @Override

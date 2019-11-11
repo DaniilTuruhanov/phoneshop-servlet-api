@@ -28,7 +28,7 @@ public class SortProductServlet extends HttpServlet {
         String query = req.getParameter("query");
 
         List<Product> findProducts = productService.findProducts(query, field, upOrDown);
-        PrintWriter printWriter=resp.getWriter();
+        PrintWriter printWriter = resp.getWriter();
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

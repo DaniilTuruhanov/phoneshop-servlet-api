@@ -5,13 +5,8 @@ import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
 
-public class ProductDemodataServletContextListener implements ServletContextListener,
-        HttpSessionListener, HttpSessionAttributeListener {
+public class ProductDemodataServletContextListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
         ArrayListProductDao.getInstance();
@@ -21,23 +16,4 @@ public class ProductDemodataServletContextListener implements ServletContextList
     public void contextDestroyed(ServletContextEvent sce) {
     }
 
-    @Override
-    public void attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent) {
-    }
-
-    @Override
-    public void attributeRemoved(HttpSessionBindingEvent httpSessionBindingEvent) {
-    }
-
-    @Override
-    public void attributeReplaced(HttpSessionBindingEvent httpSessionBindingEvent) {
-    }
-
-    @Override
-    public void sessionCreated(HttpSessionEvent httpSessionEvent) {
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-    }
 }

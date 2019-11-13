@@ -52,23 +52,25 @@ public class ArrayListProductDao implements ProductDao {
                 .collect(Collectors.toList());
     }
 
+    public int chooseComparator(Product product1, Product product2, String sortByField, String upOrDown) {
+        if (sortByField == null || upOrDown == null) {
+            return 0;
+        }
+        if (sortByField.equals("DESCRIPTION") && upOrDown.equals("UP")) {
+            return product1.getDescription().compareTo(product2.getDescription());
+        } else if (sortByField.equals("DESCRIPTION") && upOrDown.equals("DOWN")) {
+            return product2.getDescription().compareTo(product1.getDescription());
+        } else if (sortByField.equals("PRICE") && upOrDown.equals("UP")) {
+            return product1.getPrice().compareTo(product2.getPrice());
+        } else if (sortByField.equals("PRICE") && upOrDown.equals("DOWN")) {
+            return product2.getPrice().compareTo(product1.getPrice());
+        }
+        return 0;
+    }
+
     private List<Product> sortProducts(List<Product> productList, String sortByField, String upOrDown) {
         return productList.stream()
-                .sorted((product1, product2) -> {
-                    if (sortByField == null || upOrDown == null) {
-                        return 0;
-                    }
-                    if (sortByField.equals("DESCRIPTION") && upOrDown.equals("UP")) {
-                        return product1.getDescription().compareTo(product2.getDescription());
-                    } else if (sortByField.equals("DESCRIPTION") && upOrDown.equals("DOWN")) {
-                        return product2.getDescription().compareTo(product1.getDescription());
-                    } else if (sortByField.equals("PRICE") && upOrDown.equals("UP")) {
-                        return product1.getPrice().compareTo(product2.getPrice());
-                    } else if (sortByField.equals("PRICE") && upOrDown.equals("DOWN")) {
-                        return product2.getPrice().compareTo(product1.getPrice());
-                    }
-                    return 0;
-                })
+                .sorted((product1, product2) -> chooseComparator(product1, product2, sortByField, upOrDown))
                 .collect(Collectors.toList());
     }
 
@@ -96,11 +98,12 @@ public class ArrayListProductDao implements ProductDao {
             if (product.getId() == null) {
                 product.setId(UUID.randomUUID().toString());
                 productList.add(product);
-            }
-            if (productList.contains(product)) {
-                productList.set(productList.indexOf(product), product);
             } else {
-                productList.add(product);
+                if (productList.contains(product)) {
+                    productList.set(productList.indexOf(product), product);
+                } else {
+                    productList.add(product);
+                }
             }
         }
     }

@@ -1,15 +1,16 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Product {
-    private Long id;
-    private String code;
+    private String id;
     private String description;
-    /** null means there is no price because the product is outdated or new */
     private BigDecimal price;
-    /** can be null if the price is null */
+    public ArrayList<PriceRecord> priceHistory;
     private Currency currency;
     private int stock;
     private String imageUrl;
@@ -17,30 +18,25 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(String id, String description, BigDecimal price, Currency currency, int stock, ArrayList<PriceRecord> priceRecords, String imageUrl) {
         this.id = id;
-        this.code = code;
         this.description = description;
         this.price = price;
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.priceHistory = new ArrayList<>();
+        for (PriceRecord s : priceRecords) {
+            this.priceHistory.add(s);
+        }
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getDescription() {
@@ -81,5 +77,24 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public ArrayList<PriceRecord> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(ArrayList<PriceRecord> priceHistory) {
+        this.priceHistory = priceHistory;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Product product = (Product) o;
+        return (this.id == product.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -9,9 +9,7 @@ public class SynchronizeMap {
 
     public static Object findKey(String id) {
         if (id == null) {
-            id = UUID.randomUUID().toString();
             Object object = new Object();
-            uniqueObject.put(id, object);
             return object;
         }
         if (uniqueObject.containsKey(id)) {

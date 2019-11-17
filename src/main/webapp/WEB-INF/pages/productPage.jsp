@@ -5,7 +5,23 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product Page">
+    <c:if test="${not empty error}">
+        <p style="color: red">Error!!!</p>
+    </c:if>
+    <c:if test="${param.success}">
+        <p style="color: green">Success!!!</p>
+    </c:if>
     <h3>Information about product</h3>
+    <form method="post" action="${pageContext.servletContext.contextPath}/products/${product.id}"
+          style="display: flex;">
+        <input name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
+        <button>Add to cart</button>
+    </form>
+    <script>
+    </script>
+    <c:if test="${not empty error}">
+        <p style="color: red">${error}</p>
+    </c:if>
     <table border="5px">
         <tr>
             <td>
@@ -18,5 +34,21 @@
             </td>
         </tr>
     </table>
-            <a href="../">Back to Product List</a>
+    <br>
+    <br>
+    <c:if test="${not empty recentlyViewed}">
+        <h3>Recently viewed</h3>
+        <table class="button-action">
+            <c:forEach var="recentlyViewedProduct" items="${sessionScope.recentlyViewed}">
+                <td>
+                    <img style="display: block; margin-left: auto; margin-right: auto" class="product-tile"
+                         src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${recentlyViewedProduct.imageUrl}">
+                    <p><a href="products/${recentlyViewedProduct.id}">${recentlyViewedProduct.description}</a></p>
+                    <p style="text-align: center"><fmt:formatNumber value="${recentlyViewedProduct.price}"
+                                                                    type="currency"
+                                                                    currencySymbol="${recentlyViewedProduct.currency.symbol}"/></p>
+                </td>
+            </c:forEach>
+        </table>
+    </c:if>
 </tags:master>

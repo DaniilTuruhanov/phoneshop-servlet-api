@@ -1,10 +1,9 @@
 package com.es.phoneshop.cart;
 
-import com.es.phoneshop.model.product.ProductNotFoundException;
-
-import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public interface Validator {
-    Map validate(Locale locale, Cart cart, String idProduct, String quantity) throws ProductNotFoundException;
+    void validate(HttpServletRequest request, HttpServletResponse response, Map<String, String> errorMap);
 }

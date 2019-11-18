@@ -42,19 +42,19 @@ public class HttpSessionCartServiceTest {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("cart")).thenReturn(cart);
 
-        Cart result = cartService.getCart(request);
+        Cart result = cartService.getCart(session);
         assertEquals(cart, result);
     }
 
     @Test
     public void returnCartWhenRequestExistCart() {
         Currency usd = Currency.getInstance("USD");
-        Cart cart = new Cart(new LinkedList<>(Arrays.asList(new CartItem(new Product("1L", "Samsung Galaxy S", new BigDecimal(100), usd, 100, new ArrayList<>(Arrays.asList(new PriceRecord(LocalDate.of(2019, 1, 10), new BigDecimal(100), usd), new PriceRecord(LocalDate.of(2018, 9, 10), new BigDecimal(110), usd), new PriceRecord(LocalDate.of(2018, 8, 1), new BigDecimal(150), usd))), "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"), 1))), 1, new BigDecimal(110));
-
+        Cart cart = new Cart();
+       //cartService.addCartItem(cartItem);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("cart")).thenReturn(cart);
 
-        Cart result = cartService.getCart(request);
+        Cart result = cartService.getCart(session);
         assertEquals(cart, result);
     }
 }

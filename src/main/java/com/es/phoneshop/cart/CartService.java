@@ -2,10 +2,10 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.model.product.ProductNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public interface CartService {
-    Cart getCart(HttpServletRequest request);
+    Cart getCart(HttpSession session);
 
-    void addCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException;
+    void addCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException, OutOfStockException;
 }

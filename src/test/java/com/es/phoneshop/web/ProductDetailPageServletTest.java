@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.cart.Cart;
 import com.es.phoneshop.cart.CartService;
 import com.es.phoneshop.cart.HttpSessionCartService;
+import com.es.phoneshop.cart.OutOfStockException;
 import com.es.phoneshop.cart.QuantityValidator;
 import com.es.phoneshop.cart.RecentlyViewedProducts;
 import com.es.phoneshop.cart.Validator;
@@ -86,7 +87,7 @@ public class ProductDetailPageServletTest {
     }
 
     @Test
-    public void addCartItemWhenProductDetailPageDoPost() throws ServletException, IOException, ProductNotFoundException {
+    public void addCartItemWhenProductDetailPageDoPost() throws ServletException, IOException, ProductNotFoundException, OutOfStockException {
         String quantityString = "1";
         String id = "1L";
         Cart cart = new Cart();
@@ -98,7 +99,7 @@ public class ProductDetailPageServletTest {
         when(request.getParameter("quantity")).thenReturn(quantityString);
         when(request.getSession()).thenReturn(session);
         when(request.getRequestURI()).thenReturn(id);
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(session)).thenReturn(cart);
 
         servlet.doPost(request, response);
         verify(cartService).addCartItem(cart, id, Integer.valueOf(quantityString));
@@ -119,7 +120,7 @@ public class ProductDetailPageServletTest {
         when(request.getParameter("quantity")).thenReturn(quantityString);
         when(request.getSession()).thenReturn(session);
         when(request.getRequestURI()).thenReturn(id);
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(session)).thenReturn(cart);
 
         servlet.doPost(request, response);
         verify(session).setAttribute("cart", cart);
@@ -140,7 +141,7 @@ public class ProductDetailPageServletTest {
         when(request.getParameter("quantity")).thenReturn(quantityString);
         when(request.getSession()).thenReturn(session);
         when(request.getRequestURI()).thenReturn(id);
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(session)).thenReturn(cart);
 
         servlet.doPost(request, response);
         verify(session).setAttribute("cart", cart);

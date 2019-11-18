@@ -1,5 +1,7 @@
 package com.es.phoneshop.cart;
 
+import com.es.phoneshop.model.product.Product;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +17,18 @@ public class Cart {
         totalQuantity = 0;
     }
 
-    public Cart(List<CartItem> listCartItems, int totalQuantity, BigDecimal totalCost) {
-        this.listCartItems = listCartItems;
-        this.totalQuantity = totalQuantity;
-        this.totalCost = totalCost;
+    public void addToListCartItems(Product product, int quantity) throws OutOfStockException {
+        CartItem cartItem = new CartItem(product, quantity);
+        if (listCartItems.contains(cartItem)) {
+            int id = listCartItems.indexOf(cartItem);
+            if (listCartItems.get(id).getQuantity() + quantity <= product.getStock()) {
+                listCartItems.get(id).setQuantity(listCartItems.get(id).getQuantity() + quantity);
+            } else {
+                throw new OutOfStockException(product.getStock());
+            }
+        } else {
+            listCartItems.add(cartItem);
+        }
     }
 
     public List<CartItem> getListCartItems() {

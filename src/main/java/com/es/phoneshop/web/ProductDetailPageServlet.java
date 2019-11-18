@@ -1,10 +1,12 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.cart.Cart;
-import com.es.phoneshop.cart.CartService;
 import com.es.phoneshop.cart.HttpSessionCartService;
+import com.es.phoneshop.cart.OutOfStockException;
+import com.es.phoneshop.cart.ParseIdClass;
+import com.es.phoneshop.cart.ParseQuantityClass;
 import com.es.phoneshop.cart.QuantityValidator;
-import com.es.phoneshop.cart.RecentlyViewedProducts;
+import com.es.phoneshop.cart.RecentlyViewedProductsService;
 import com.es.phoneshop.cart.Validator;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
@@ -16,94 +18,81 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Queue;
 
 public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
     private HttpSessionCartService cartService;
-    private RecentlyViewedProducts recentlyViewedProducts;
+    private RecentlyViewedProductsService recentlyViewedProductsService;
+    private ParseIdClass parseIdClass;
+    private ParseQuantityClass parseQuantityClass;
 
     @Override
     public void init() {
-        recentlyViewedProducts = new RecentlyViewedProducts();
+        parseIdClass = new ParseIdClass();
+        recentlyViewedProductsService = RecentlyViewedProductsService.getInstance();
         productService = productService.getInstance();
         cartService = cartService.getInstance();
+        parseIdClass = new ParseIdClass();
+        parseQuantityClass = new ParseQuantityClass();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idProduct = getIdProduct(request);
+        String idProduct = parseIdClass.getId(request);
         showDetailPage(idProduct, request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Validator validator = new QuantityValidator();
-        String idProduct = getIdProduct(request);
-        Cart cart = cartService.getCart(request);
-        try {
-            addProductToCart(validator, cart, idProduct, request, response);
-        } catch (ProductNotFoundException | ParseException e) {
-            e.printStackTrace();
-        }
+        HttpSession session = request.getSession();
+        String idProduct = parseIdClass.getId(request);
+        Cart cart = cartService.getCart(session);
+        addProductToCart(validator, cart, idProduct, request, response);
     }
 
     public void showDetailPage(String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Product product = productService.getProduct(idProduct);
             HttpSession session = request.getSession();
-
+            recentlyViewedProductsService.setRecentlyViewedProductInSession(session);
             request.setAttribute("product", product);
-            setupRecentlyViewedProducts(request);
             request.getRequestDispatcher("/WEB-INF/pages/productPage.jsp").forward(request, response);
-            recentlyViewedProducts.addProductInRecentlyViewes(product);
-            session.setAttribute("objectRecentlyViewed", recentlyViewedProducts);
+            recentlyViewedProductsService.addProductInRecentlyViewes(product, session);
         } catch (ProductNotFoundException e) {
             request.setAttribute("errorId", idProduct);
             request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
         }
     }
 
-    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ProductNotFoundException, ServletException, IOException, ParseException {
+    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String stringQuantity = request.getParameter("quantity");
         Locale locale = request.getLocale();
-        Map errorMap = validator.validate(locale, cart, idProduct, stringQuantity);
+        Map<String, String> errorMap = new HashMap<>();
+        validator.validate(request, response, errorMap);
         HttpSession session = request.getSession();
 
         if (errorMap.isEmpty()) {
-            int intQuantity = getQuantity(locale, stringQuantity);
-
-            cartService.addCartItem(cart, idProduct, intQuantity);
-
+            int intQuantity = parseQuantityClass.getQuantity(locale, stringQuantity);
+            try {
+                cartService.addCartItem(cart, idProduct, intQuantity);
+            } catch (OutOfStockException e) {
+                errorMap.put("quantity", "Not enough stock. Stock: " + e.getTotalQuantity());
+                request.setAttribute("errorMap", errorMap);
+                session.setAttribute("cart", cart);
+                showDetailPage(idProduct, request, response);
+                return;
+            }
             session.setAttribute("cart", cart);
             response.sendRedirect(request.getRequestURI() + "?success=true");
         } else {
-            request.setAttribute("error", errorMap.get("error"));
+            request.setAttribute("errorMap", errorMap);
             session.setAttribute("cart", cart);
-
             showDetailPage(idProduct, request, response);
         }
-    }
-
-    public void setupRecentlyViewedProducts(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        recentlyViewedProducts = session.getAttribute("objectRecentlyViewed") == null ? new RecentlyViewedProducts() : (RecentlyViewedProducts) request.getSession().getAttribute("objectRecentlyViewed");
-
-        Queue<Product> productLinkedList = recentlyViewedProducts.getProductQueue();
-        session.setAttribute("recentlyViewed", productLinkedList);
-    }
-
-    public int getQuantity(Locale locale, String stringQuantity) throws ParseException {
-        return NumberFormat.getInstance(locale).parse(stringQuantity).intValue();
-    }
-
-    private String getIdProduct(HttpServletRequest request) {
-        String idProduct = request.getRequestURI();
-        return idProduct.substring(idProduct.lastIndexOf("/") + 1);
     }
 
     public ProductService getProductService() {

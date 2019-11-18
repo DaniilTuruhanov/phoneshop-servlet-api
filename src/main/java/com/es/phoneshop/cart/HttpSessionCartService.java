@@ -4,16 +4,15 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.product.ProductService;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 
 public class HttpSessionCartService implements CartService {
-    private Cart cart;
     private static HttpSessionCartService cartService;
-    private static ProductService productService = ProductService.getInstance();
+    private static ProductService productService;
 
     private HttpSessionCartService() {
-        cart = new Cart();
+        productService = ProductService.getInstance();
     }
 
     public static HttpSessionCartService getInstance() {
@@ -24,27 +23,28 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpServletRequest request) {
-        Cart cart = (Cart) request.getSession().getAttribute("cart");
+    public Cart getCart(HttpSession session) {
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
-            request.getSession().setAttribute("cart", cart);
+            session.setAttribute("cart", cart);
         }
         return cart;
     }
 
     @Override
-    public void addCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException {
+    public void addCartItem(Cart cart, String idProduct, int quantity) throws OutOfStockException, ProductNotFoundException {
         Product product = productService.getProduct(idProduct);
-        CartItem cartItem = new CartItem(product, quantity);
-        if (cart.getListCartItems().contains(cartItem)) {
-            int id = cart.getListCartItems().indexOf(cartItem);
-            cart.getListCartItems().get(id).setQuantity(cart.getListCartItems().get(id).getQuantity() + quantity);
-        } else {
-            cart.getListCartItems().add(cartItem);
-        }
-        cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
-        cart.setTotalCost(cart.getTotalCost().add(productService.getProduct(idProduct).getPrice().multiply(new BigDecimal(quantity))));
+        cart.addToListCartItems(product, quantity);
+
+        int totalQuantity = cart.getTotalQuantity();
+        BigDecimal totalCost = cart.getTotalCost();
+        BigDecimal totalProductPrice = productService.getProduct(idProduct).getPrice();
+        BigDecimal totalResultProductPrice = totalProductPrice.multiply(new BigDecimal(quantity));
+
+        cart.setTotalQuantity(totalQuantity + quantity);
+        BigDecimal result = totalCost.add(totalResultProductPrice);
+        cart.setTotalCost(result);
     }
 }
 

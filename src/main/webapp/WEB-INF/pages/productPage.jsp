@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product Page">
@@ -21,7 +21,9 @@
     <script>
     </script>
     <c:if test="${not empty errorMap}">
-        <p style="color: red">${errorMap.get("quantity")}</p>
+        <c:forEach var="error" items="${errorMap.get('quantity')}">
+            <p style="color: red">${error}</p>
+        </c:forEach>
     </c:if>
     <table border="5px">
         <tr>

@@ -30,16 +30,12 @@ public class HttpSessionCartServiceTest {
     private HttpSessionCartService cartService = HttpSessionCartService.getInstance();
 
     @Mock
-    private HttpServletRequest request;
-
-    @Mock
     private HttpSession session;
 
     @Test
     public void getNewEmptyCartWhenRequestDoesNotExistCart() {
         Cart cart = new Cart();
 
-        when(request.getSession()).thenReturn(session);
         when(session.getAttribute("cart")).thenReturn(cart);
 
         Cart result = cartService.getCart(session);
@@ -47,13 +43,15 @@ public class HttpSessionCartServiceTest {
     }
 
     @Test
-    public void returnCartWhenRequestExistCart() {
-        Currency usd = Currency.getInstance("USD");
+    public void returnCartWhenRequestExistCart() throws ProductNotFoundException, OutOfStockException {
+
         Cart cart = new Cart();
-       //cartService.addCartItem(cartItem);
-        when(request.getSession()).thenReturn(session);
+        String idProduct = "1L";
+        int quantity = 1;
+
         when(session.getAttribute("cart")).thenReturn(cart);
 
+        cartService.addCartItem(cart, idProduct, quantity);
         Cart result = cartService.getCart(session);
         assertEquals(cart, result);
     }

@@ -3,8 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.cart.Cart;
 import com.es.phoneshop.cart.HttpSessionCartService;
 import com.es.phoneshop.cart.OutOfStockException;
-import com.es.phoneshop.cart.ParseIdClass;
-import com.es.phoneshop.cart.ParseQuantityClass;
 import com.es.phoneshop.cart.QuantityValidator;
 import com.es.phoneshop.cart.RecentlyViewedProductsService;
 import com.es.phoneshop.cart.Validator;
@@ -18,46 +16,49 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.es.phoneshop.cart.ParseIdAndQuantity.getId;
+import static com.es.phoneshop.cart.ParseIdAndQuantity.getQuantity;
 
 public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
     private HttpSessionCartService cartService;
     private RecentlyViewedProductsService recentlyViewedProductsService;
-    private ParseIdClass parseIdClass;
-    private ParseQuantityClass parseQuantityClass;
+    private static QuantityValidator quantityValidator;
 
     @Override
     public void init() {
-        parseIdClass = new ParseIdClass();
+        quantityValidator = QuantityValidator.getInstance();
         recentlyViewedProductsService = RecentlyViewedProductsService.getInstance();
         productService = productService.getInstance();
         cartService = cartService.getInstance();
-        parseIdClass = new ParseIdClass();
-        parseQuantityClass = new ParseQuantityClass();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idProduct = parseIdClass.getId(request);
+        String idProduct = getId(request);
+
         showDetailPage(idProduct, request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Validator validator = new QuantityValidator();
         HttpSession session = request.getSession();
-        String idProduct = parseIdClass.getId(request);
+        String idProduct = getId(request);
         Cart cart = cartService.getCart(session);
-        addProductToCart(validator, cart, idProduct, request, response);
+
+        addProductToCart(quantityValidator, cart, idProduct, request, response);
     }
 
     public void showDetailPage(String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Product product = productService.getProduct(idProduct);
             HttpSession session = request.getSession();
+
             recentlyViewedProductsService.setRecentlyViewedProductInSession(session);
             request.setAttribute("product", product);
             request.getRequestDispatcher("/WEB-INF/pages/productPage.jsp").forward(request, response);
@@ -71,16 +72,24 @@ public class ProductDetailPageServlet extends HttpServlet {
     private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String stringQuantity = request.getParameter("quantity");
         Locale locale = request.getLocale();
-        Map<String, String> errorMap = new HashMap<>();
-        validator.validate(request, response, errorMap);
+        Map<String, ArrayList<String>> errorMap = new HashMap<>();
         HttpSession session = request.getSession();
 
+        validator.validate(request, response, errorMap);
         if (errorMap.isEmpty()) {
-            int intQuantity = parseQuantityClass.getQuantity(locale, stringQuantity);
+            int intQuantity = getQuantity(locale, stringQuantity);
             try {
-                cartService.addCartItem(cart, idProduct, intQuantity);
+                try {
+                    cartService.addCartItem(cart, idProduct, intQuantity);
+                } catch (ProductNotFoundException e) {
+                    request.setAttribute("errorId", idProduct);
+                    request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
+                }
             } catch (OutOfStockException e) {
-                errorMap.put("quantity", "Not enough stock. Stock: " + e.getTotalQuantity());
+                ArrayList<String> errors = new ArrayList<>();
+
+                errors.add("Not enough stock. Stock: " + e.getTotalQuantity());
+                errorMap.put("quantity", errors);
                 request.setAttribute("errorMap", errorMap);
                 session.setAttribute("cart", cart);
                 showDetailPage(idProduct, request, response);
@@ -101,6 +110,22 @@ public class ProductDetailPageServlet extends HttpServlet {
 
     public HttpSessionCartService getCartService() {
         return cartService;
+    }
+
+    public RecentlyViewedProductsService getRecentlyViewedProductsService() {
+        return recentlyViewedProductsService;
+    }
+
+    public void setRecentlyViewedProductsService(RecentlyViewedProductsService recentlyViewedProductsService) {
+        this.recentlyViewedProductsService = recentlyViewedProductsService;
+    }
+
+    public static QuantityValidator getQuantityValidator() {
+        return quantityValidator;
+    }
+
+    public static void setQuantityValidator(QuantityValidator quantityValidator) {
+        ProductDetailPageServlet.quantityValidator = quantityValidator;
     }
 
     public void setCartService(HttpSessionCartService cartService) {

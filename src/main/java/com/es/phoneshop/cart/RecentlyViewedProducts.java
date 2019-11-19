@@ -12,6 +12,20 @@ public class RecentlyViewedProducts {
         productQueue = new LinkedList<>();
     }
 
+    public void addProductInProductQueue(Product product) {
+        if (productQueue.contains(product)) {
+            productQueue.remove(product);
+            productQueue.add(product);
+        } else {
+            if (productQueue.size() < 3) {
+                productQueue.add(product);
+            } else {
+                productQueue.poll();
+                productQueue.add(product);
+            }
+        }
+    }
+
     public Queue<Product> getProductQueue() {
         return productQueue;
     }

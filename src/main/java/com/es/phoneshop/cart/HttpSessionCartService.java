@@ -35,16 +35,9 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void addCartItem(Cart cart, String idProduct, int quantity) throws OutOfStockException, ProductNotFoundException {
         Product product = productService.getProduct(idProduct);
+
         cart.addToListCartItems(product, quantity);
-
-        int totalQuantity = cart.getTotalQuantity();
-        BigDecimal totalCost = cart.getTotalCost();
-        BigDecimal totalProductPrice = productService.getProduct(idProduct).getPrice();
-        BigDecimal totalResultProductPrice = totalProductPrice.multiply(new BigDecimal(quantity));
-
-        cart.setTotalQuantity(totalQuantity + quantity);
-        BigDecimal result = totalCost.add(totalResultProductPrice);
-        cart.setTotalCost(result);
+        cart.recalculateTotals(product, quantity);
     }
 }
 

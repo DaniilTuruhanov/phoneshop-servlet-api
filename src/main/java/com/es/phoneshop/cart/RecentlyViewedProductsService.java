@@ -23,24 +23,13 @@ public class RecentlyViewedProductsService {
         if (recentlyViewedProducts == null) {
             recentlyViewedProducts = new RecentlyViewedProducts();
         }
-        session.setAttribute("recentlyViewedProducts",recentlyViewedProducts);
+        session.setAttribute("recentlyViewedProducts", recentlyViewedProducts);
     }
 
     public void addProductInRecentlyViewes(Product product, HttpSession session) {
         RecentlyViewedProducts recentlyViewedProducts = (RecentlyViewedProducts) session.getAttribute("recentlyViewedProducts");
-        Queue<Product> productQueue = recentlyViewedProducts.getProductQueue();
-        if (productQueue.contains(product)) {
-            productQueue.remove(product);
-            productQueue.add(product);
-        }else {
-            if (productQueue.size() < 3) {
-                productQueue.add(product);
-            } else {
-                productQueue.poll();
-                productQueue.add(product);
-            }
-        }
-        recentlyViewedProducts.setProductQueue(productQueue);
-        session.setAttribute("recentlyViewedProducts",recentlyViewedProducts);
+
+        recentlyViewedProducts.addProductInProductQueue(product);
+        session.setAttribute("recentlyViewedProducts", recentlyViewedProducts);
     }
 }

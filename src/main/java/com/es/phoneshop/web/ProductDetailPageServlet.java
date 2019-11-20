@@ -1,6 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.cart.Cart;
+import com.es.phoneshop.cart.ErrorMap;
 import com.es.phoneshop.cart.HttpSessionCartService;
 import com.es.phoneshop.cart.OutOfStockException;
 import com.es.phoneshop.cart.QuantityValidator;
@@ -16,10 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.es.phoneshop.cart.ParseIdAndQuantity.getId;
 import static com.es.phoneshop.cart.ParseIdAndQuantity.getQuantity;
@@ -28,7 +26,7 @@ public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
     private HttpSessionCartService cartService;
     private RecentlyViewedProductsService recentlyViewedProductsService;
-    private static QuantityValidator quantityValidator;
+    private QuantityValidator quantityValidator;
 
     @Override
     public void init() {
@@ -59,7 +57,6 @@ public class ProductDetailPageServlet extends HttpServlet {
             Product product = productService.getProduct(idProduct);
             HttpSession session = request.getSession();
 
-            recentlyViewedProductsService.setRecentlyViewedProductInSession(session);
             request.setAttribute("product", product);
             request.getRequestDispatcher("/WEB-INF/pages/productPage.jsp").forward(request, response);
             recentlyViewedProductsService.addProductInRecentlyViewes(product, session);
@@ -72,11 +69,11 @@ public class ProductDetailPageServlet extends HttpServlet {
     private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String stringQuantity = request.getParameter("quantity");
         Locale locale = request.getLocale();
-        Map<String, ArrayList<String>> errorMap = new HashMap<>();
+        ErrorMap errorMap = new ErrorMap();
         HttpSession session = request.getSession();
 
         validator.validate(request, response, errorMap);
-        if (errorMap.isEmpty()) {
+        if (errorMap.getErrorMap().isEmpty()) {
             int intQuantity = getQuantity(locale, stringQuantity);
             try {
                 try {
@@ -86,10 +83,7 @@ public class ProductDetailPageServlet extends HttpServlet {
                     request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
                 }
             } catch (OutOfStockException e) {
-                ArrayList<String> errors = new ArrayList<>();
-
-                errors.add("Not enough stock. Stock: " + e.getTotalQuantity());
-                errorMap.put("quantity", errors);
+                errorMap.addError("quantity", "Not enough stock. Stock: " + e.getTotalQuantity());
                 request.setAttribute("errorMap", errorMap);
                 session.setAttribute("cart", cart);
                 showDetailPage(idProduct, request, response);
@@ -120,12 +114,12 @@ public class ProductDetailPageServlet extends HttpServlet {
         this.recentlyViewedProductsService = recentlyViewedProductsService;
     }
 
-    public static QuantityValidator getQuantityValidator() {
+    public QuantityValidator getQuantityValidator() {
         return quantityValidator;
     }
 
-    public static void setQuantityValidator(QuantityValidator quantityValidator) {
-        ProductDetailPageServlet.quantityValidator = quantityValidator;
+    public void setQuantityValidator(QuantityValidator quantityValidator) {
+        this.quantityValidator = quantityValidator;
     }
 
     public void setCartService(HttpSessionCartService cartService) {

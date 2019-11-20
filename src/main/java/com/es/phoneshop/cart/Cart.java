@@ -29,15 +29,15 @@ public class Cart {
         } else {
             listCartItems.add(cartItem);
         }
+        recalculateTotals(product, quantity);
     }
 
     public void recalculateTotals(Product product, int quantity) {
         BigDecimal totalProductPrice = product.getPrice();
         BigDecimal totalResultProductPrice = totalProductPrice.multiply(new BigDecimal(quantity));
-        BigDecimal result = totalCost.add(totalResultProductPrice);
 
+        totalCost = totalCost.add(totalResultProductPrice);
         totalQuantity = totalQuantity + quantity;
-        totalCost = totalCost.add(result);
     }
 
     public List<CartItem> getListCartItems() {

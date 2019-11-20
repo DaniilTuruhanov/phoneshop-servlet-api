@@ -1,13 +1,11 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.cart.Cart;
-import com.es.phoneshop.cart.CartService;
 import com.es.phoneshop.cart.HttpSessionCartService;
 import com.es.phoneshop.cart.OutOfStockException;
 import com.es.phoneshop.cart.QuantityValidator;
 import com.es.phoneshop.cart.RecentlyViewedProducts;
 import com.es.phoneshop.cart.RecentlyViewedProductsService;
-import com.es.phoneshop.cart.Validator;
 import com.es.phoneshop.model.product.PriceRecord;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
@@ -28,13 +26,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Currency;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Queue;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,7 +84,6 @@ public class ProductDetailPageServletTest {
 
         servlet.doGet(request, response);
         verify(request).setAttribute("product", product);
-        verify(recentlyViewedProductsService).setRecentlyViewedProductInSession(session);
         verify(recentlyViewedProductsService).addProductInRecentlyViewes(product, session);
     }
 
@@ -101,7 +93,6 @@ public class ProductDetailPageServletTest {
         String id = "1L";
         Cart cart = new Cart();
         Locale locale = Locale.US;
-        Map<String, ArrayList<String>> errorMap = Collections.emptyMap();
         servlet.setProductService(productService);
         servlet.setCartService(cartService);
         servlet.setQuantityValidator(quantityValidator);
@@ -115,6 +106,5 @@ public class ProductDetailPageServletTest {
         servlet.doPost(request, response);
         verify(cartService).addCartItem(cart, id, Integer.valueOf(quantityString));
         verify(session).setAttribute("cart", cart);
-        verify(quantityValidator).validate(request, response, errorMap);
     }
 }

@@ -5,7 +5,6 @@ import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 
 public class HttpSessionCartService implements CartService {
     private static HttpSessionCartService cartService;
@@ -37,7 +36,6 @@ public class HttpSessionCartService implements CartService {
         Product product = productService.getProduct(idProduct);
 
         cart.addToListCartItems(product, quantity);
-        cart.recalculateTotals(product, quantity);
     }
 }
 

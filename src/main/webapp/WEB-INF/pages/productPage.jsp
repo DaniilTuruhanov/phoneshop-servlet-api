@@ -20,8 +20,8 @@
     </form>
     <script>
     </script>
-    <c:if test="${not empty errorMap}">
-        <c:forEach var="error" items="${errorMap.get('quantity')}">
+    <c:if test="${not empty errorMap.getErrorMap()}">
+        <c:forEach var="error" items="${errorMap.getErrorMap().get('quantity')}">
             <p style="color: red">${error}</p>
         </c:forEach>
     </c:if>
@@ -39,7 +39,7 @@
     </table>
     <br>
     <br>
-    <c:if test="${not empty sessionScope.recentlyViewedProducts.getProductQueue()}">
+    <c:if test="${not empty sessionScope.recentlyViewedProducts}">
         <h3>Recently viewed</h3>
         <table class="button-action">
             <c:forEach var="recentlyViewedProduct" items="${sessionScope.recentlyViewedProducts.getProductQueue()}">

@@ -6,7 +6,6 @@
 <%@ taglib prefix="sort" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-
 <tags:master pageTitle="Product Page">
     <p>
         Welcome to Expert-Soft training!
@@ -24,7 +23,8 @@
                 <td>
                     Description
                     <span id="DescribeUP" href="products/sort?query=${param.query}&sort=UP&order=DESCRIPTION">↑</span>
-                    <span id="DescribeDOWN" href="products/sort?query=${param.query}&sort=DOWN&order=DESCRIPTION">↓</span>
+                    <span id="DescribeDOWN"
+                          href="products/sort?query=${param.query}&sort=DOWN&order=DESCRIPTION">↓</span>
 
                 </td>
                 <td class="price">
@@ -43,17 +43,18 @@
                     <td><a href="products/${product.id}">${product.description}</a></td>
                     <td class="price">
                         <a href="" onclick="priceHistory();
-                            function priceHistory() {
-                            let a='<h1>PriceHistory</h1>'+
-                            '<h2>${product.description}</h2>'+
-                            '<c:forEach var="priceRecords" items="${product.priceHistory}">'+
-                            '<p> ${priceRecords.data}- ${priceRecords.price}  ${priceRecords.currency.symbol} </p>'+
-                            '</c:forEach>';
-                            console.log(a);
-                            return document.querySelector('.price-history').innerHTML!==a?
-                            document.querySelector('.price-history').innerHTML=a:
-                            document.querySelector('.price-history').innerHTML='';
-                            }; return false">${product.price}
+                                function priceHistory() {
+                                let a='<h1>PriceHistory</h1>'+
+                                '<h2>${product.description}</h2>'+
+                                '<c:forEach var="priceRecords" items="${product.priceHistory}">'+
+                                '<p> ${priceRecords.data}- ${priceRecords.price}  ${priceRecords.currency.symbol} </p>'+
+                                '</c:forEach>';
+                                console.log(a);
+                                return document.querySelector('.price-history').innerHTML!==a?
+                                document.querySelector('.price-history').innerHTML=a:
+                                document.querySelector('.price-history').innerHTML='';
+                                }; return false"> <fmt:formatNumber value="${product.price}" type="currency"
+                                                                    currencySymbol="${product.currency.getSymbol()}"/>
                         </a>
                     </td>
                 </tr>
@@ -68,9 +69,10 @@
                 ' src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/' + product.imageUrl + '">' +
                 '</td>' +
                 '<td><a href=products/' + product.id + '>' + product.description + '</a></td>' +
-                '<td class="price">'+
-                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price + '</span></td>';
-               }
+                '<td class="price">' +
+                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price +" "+ product.currency + '</span></td>';
+        }
+
         function sortProducts(url) {
             fetch('/phoneshop_servlet_api_war_exploded/' + url, {
                 method: 'GET'
@@ -85,19 +87,20 @@
                     tbody.appendChild(node);
                 })
             })
-            let a =document.getElementsByClassName('abc');
+            let a = document.getElementsByClassName('abc');
             console.log(a);
             return a;
         }
+
         document.getElementById('DescribeUP').addEventListener('click', (e) => {
-             sortProducts(e.target.getAttribute('href'));
+            sortProducts(e.target.getAttribute('href'));
         });
 
         document.getElementById('DescribeDOWN').addEventListener('click', (e) => {
             sortProducts(e.target.getAttribute('href'));
         });
         document.getElementById('PriceUP').addEventListener('click', (e) => {
-             sortProducts(e.target.getAttribute('href'));
+            sortProducts(e.target.getAttribute('href'));
         });
         document.getElementById('PriceDOWN').addEventListener('click', (e) => {
             sortProducts(e.target.getAttribute('href'));

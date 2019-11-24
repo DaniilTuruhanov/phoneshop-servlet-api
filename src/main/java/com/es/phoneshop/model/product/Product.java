@@ -1,12 +1,12 @@
 package com.es.phoneshop.model.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Objects;
-import java.util.UUID;
 
-public class Product {
+public class Product implements Serializable {
     private String id;
     private String description;
     private BigDecimal price;

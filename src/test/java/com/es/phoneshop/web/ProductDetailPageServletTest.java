@@ -80,7 +80,6 @@ public class ProductDetailPageServletTest {
         when(request.getSession()).thenReturn(session);
         when(request.getRequestURI()).thenReturn(idProduct);
         when(productService.getProduct(idProduct.substring(idProduct.lastIndexOf("/") + 1))).thenReturn(product);
-        when(session.getAttribute("recentlyViewedProducts")).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
         verify(request).setAttribute("product", product);
@@ -92,12 +91,10 @@ public class ProductDetailPageServletTest {
         String quantityString = "1";
         String id = "1L";
         Cart cart = new Cart();
-        Locale locale = Locale.US;
         servlet.setProductService(productService);
         servlet.setCartService(cartService);
         servlet.setQuantityValidator(quantityValidator);
 
-        when(request.getLocale()).thenReturn(locale);
         when(request.getParameter("quantity")).thenReturn(quantityString);
         when(request.getSession()).thenReturn(session);
         when(request.getRequestURI()).thenReturn(id);

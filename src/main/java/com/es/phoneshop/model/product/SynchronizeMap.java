@@ -2,7 +2,6 @@ package com.es.phoneshop.model.product;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SynchronizeMap {
     private static Map<String, Object> uniqueObject = new HashMap<>();

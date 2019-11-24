@@ -2,9 +2,10 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class CartItem {
+public class CartItem implements Serializable {
     private Product product;
     private int quantity;
 
@@ -32,11 +33,11 @@ public class CartItem {
     @Override
     public boolean equals(Object o) {
         CartItem cartItem = (CartItem) o;
-        return product.equals(cartItem.product);
+        return product.getId().equals(cartItem.getProduct().getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product);
+        return Objects.hash(product.getId());
     }
 }

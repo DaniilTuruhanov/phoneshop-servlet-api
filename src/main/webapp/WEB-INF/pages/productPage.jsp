@@ -6,7 +6,7 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product Page">
-    <c:if test="${not empty errorMap}">
+    <c:if test="${not empty errorMapForPDP.getErrorMap()}">
         <p style="color: red">Error!!!</p>
     </c:if>
     <c:if test="${param.success}">
@@ -18,10 +18,8 @@
         <input name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
         <button>Add to cart</button>
     </form>
-    <script>
-    </script>
-    <c:if test="${not empty errorMap.getErrorMap()}">
-        <c:forEach var="error" items="${errorMap.getErrorMap().get('quantity')}">
+    <c:if test="${not empty errorMapForPDP.getErrorMap()}">
+        <c:forEach var="error" items="${errorMapForPDP.getErrorMap().get(product.id)}">
             <p style="color: red">${error}</p>
         </c:forEach>
     </c:if>

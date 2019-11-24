@@ -24,9 +24,8 @@ public class HttpSessionCartService implements CartService {
     @Override
     public Cart getCart(HttpSession session) {
         Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new Cart();
-            session.setAttribute("cart", cart);
+        if(cart==null){
+            cart =new Cart();
         }
         return cart;
     }
@@ -36,6 +35,18 @@ public class HttpSessionCartService implements CartService {
         Product product = productService.getProduct(idProduct);
 
         cart.addToListCartItems(product, quantity);
+    }
+
+    @Override
+    public void updateCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException, OutOfStockException {
+        Product product = productService.getProduct(idProduct);
+
+        cart.updateCartItemInListCartItems(product, quantity);
+    }
+
+    @Override
+    public void deleteCartItem(Cart cart, String idProduct) {
+        cart.deleteCartItem(idProduct);
     }
 }
 

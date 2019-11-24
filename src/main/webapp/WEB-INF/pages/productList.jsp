@@ -46,9 +46,13 @@
                                 function priceHistory() {
                                 let a='<h1>PriceHistory</h1>'+
                                 '<h2>${product.description}</h2>'+
-                                '<c:forEach var="priceRecords" items="${product.priceHistory}">'+
-                                '<p> ${priceRecords.data}- ${priceRecords.price}  ${priceRecords.currency.symbol} </p>'+
-                                '</c:forEach>';
+                                '
+                        <c:forEach var="priceRecords" items="${product.priceHistory}">'+
+                                '<p> ${priceRecords.data}-
+                            <fmt:formatNumber value="${priceRecords.price}" type="currency"
+                                              currencySymbol="${priceRecords.currency.getSymbol()}"/> </p>'+
+                                '
+                        </c:forEach>';
                                 console.log(a);
                                 return document.querySelector('.price-history').innerHTML!==a?
                                 document.querySelector('.price-history').innerHTML=a:
@@ -70,7 +74,7 @@
                 '</td>' +
                 '<td><a href=products/' + product.id + '>' + product.description + '</a></td>' +
                 '<td class="price">' +
-                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price +" "+ product.currency + '</span></td>';
+                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price + " " + product.currency + '</span></td>';
         }
 
         function sortProducts(url) {

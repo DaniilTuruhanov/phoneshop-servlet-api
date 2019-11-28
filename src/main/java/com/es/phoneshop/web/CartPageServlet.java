@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.es.phoneshop.cart.ParseQuantityClass.getQuantity;
+import static com.es.phoneshop.cart.ParseString.getQuantity;
 
 public class CartPageServlet extends HttpServlet {
     private CartService cartService;
@@ -39,7 +39,13 @@ public class CartPageServlet extends HttpServlet {
         String[] productIdStrings = req.getParameterValues("productId");
         String[] productQuantityStrings = req.getParameterValues("productQuantity");
         for (int i = 0; i < productIdStrings.length; i++) {
-            updateProductInCart(productIdStrings[i], productQuantityStrings[i], errorMap, req, resp);
+            try {
+                updateProductInCart(productIdStrings[i], productQuantityStrings[i], errorMap, req, resp);
+            } catch (ProductNotFoundException e) {
+                req.setAttribute("errorId", productIdStrings[i]);
+                req.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(req, resp);
+                return;
+            }
         }
         if (errorMap.getErrorMap().isEmpty()) {
             resp.sendRedirect(req.getRequestURI() + "?successUpdate=true");
@@ -49,25 +55,19 @@ public class CartPageServlet extends HttpServlet {
         }
     }
 
-    private void updateProductInCart(String idProduct, String quantity, ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void updateProductInCart(String idProduct, String quantity, ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response)
+            throws ProductNotFoundException {
         HttpSession session = request.getSession();
         Cart cart = cartService.getCart(session);
         Pair<String, String> pair = new Pair<>(quantity, idProduct);
-
         validator.validate(pair, errorMap);
         if (errorMap.getErrorMap().get("quantity-" + idProduct) == null) {
             int intQuantity = getQuantity(quantity);
             try {
                 cartService.updateCartItem(cart, idProduct, intQuantity);
-            } catch (ProductNotFoundException e) {
-                request.setAttribute("errorId", idProduct);
-                request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
             } catch (OutOfStockException e) {
                 errorMap.addError("quantity-" + idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
-                session.setAttribute("cart", cart);
             }
-        } else {
-            session.setAttribute("cart", cart);
         }
     }
 }

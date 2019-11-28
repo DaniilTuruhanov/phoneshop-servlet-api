@@ -33,7 +33,7 @@ public class CartItem implements Serializable {
     @Override
     public boolean equals(Object o) {
         CartItem cartItem = (CartItem) o;
-        return product.equals(cartItem.getProduct());
+        return product.getId().equals(cartItem.getProduct().getId());
     }
 
     @Override

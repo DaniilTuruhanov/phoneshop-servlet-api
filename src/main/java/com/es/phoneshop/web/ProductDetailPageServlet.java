@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.es.phoneshop.cart.ParseIdClass.getId;
-import static com.es.phoneshop.cart.ParseQuantityClass.getQuantity;
+import static com.es.phoneshop.cart.ParseString.getId;
+import static com.es.phoneshop.cart.ParseString.getQuantity;
 
 public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
@@ -66,7 +66,8 @@ public class ProductDetailPageServlet extends HttpServlet {
         }
     }
 
-    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String stringQuantity = request.getParameter("quantity");
         ErrorMap errorMap = new ErrorMap();
         HttpSession session = request.getSession();

@@ -31,13 +31,15 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void addCartItem(Cart cart, String idProduct, int quantity) throws OutOfStockException, ProductNotFoundException {
+    public void addCartItem(Cart cart, String idProduct, int quantity)
+            throws OutOfStockException, ProductNotFoundException {
         Product product = productService.getProduct(idProduct);
         cart.add(product, quantity);
     }
 
     @Override
-    public void updateCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException, OutOfStockException {
+    public void updateCartItem(Cart cart, String idProduct, int quantity)
+            throws ProductNotFoundException, OutOfStockException {
         Product product = productService.getProduct(idProduct);
         cart.update(product, quantity);
     }

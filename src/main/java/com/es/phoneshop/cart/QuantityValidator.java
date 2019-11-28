@@ -17,11 +17,11 @@ public class QuantityValidator implements Validator<Pair<String, String>> {
     }
 
     @Override
-    public void validate(Pair<String, String> quantity, ErrorMap errorMap) {
+    public void validate(Pair<String, String> fieldAndProductId, ErrorMap errorMap) {
         try {
-            int intQuantity = Integer.valueOf(quantity.getKey());
+            int intQuantity = Integer.valueOf(fieldAndProductId.getKey());
         } catch (NumberFormatException e) {
-            errorMap.addError("quantity-" + quantity.getValue(), "Not a number");
+            errorMap.addError("quantity-" + fieldAndProductId.getValue(), "Not a number");
         }
     }
 }

@@ -2,11 +2,10 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.model.product.Product;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class RecentlyViewedProducts implements Serializable {
+public class RecentlyViewedProducts {
     private Queue<Product> productQueue;
 
     public RecentlyViewedProducts() {

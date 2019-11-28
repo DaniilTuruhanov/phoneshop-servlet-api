@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.es.phoneshop.cart.ParseIdAndQuantity.getQuantity;
+import static com.es.phoneshop.cart.ParseQuantityClass.getQuantity;
 
 public class CartPageServlet extends HttpServlet {
     private CartService cartService;
@@ -44,7 +44,7 @@ public class CartPageServlet extends HttpServlet {
         if (errorMap.getErrorMap().isEmpty()) {
             resp.sendRedirect(req.getRequestURI() + "?successUpdate=true");
         } else {
-            req.setAttribute("errorMap", errorMap);
+            req.setAttribute("errorMap", errorMap.getErrorMap());
             req.getRequestDispatcher("/WEB-INF/pages/cartPage.jsp").forward(req, resp);
         }
     }
@@ -53,8 +53,9 @@ public class CartPageServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Cart cart = cartService.getCart(session);
         Pair<String, String> pair = new Pair<>(quantity, idProduct);
+
         validator.validate(pair, errorMap);
-        if (errorMap.getErrorMap().get(idProduct) == null) {
+        if (errorMap.getErrorMap().get("quantity-" + idProduct) == null) {
             int intQuantity = getQuantity(quantity);
             try {
                 cartService.updateCartItem(cart, idProduct, intQuantity);
@@ -62,7 +63,7 @@ public class CartPageServlet extends HttpServlet {
                 request.setAttribute("errorId", idProduct);
                 request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
             } catch (OutOfStockException e) {
-                errorMap.addError(idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
+                errorMap.addError("quantity-" + idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
                 session.setAttribute("cart", cart);
             }
         } else {

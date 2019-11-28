@@ -8,9 +8,7 @@ import javax.servlet.http.HttpSessionListener;
 public class AddCartHttpSessionListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
-        Cart cart = new Cart();
-
-        httpSessionEvent.getSession().setAttribute("cart", cart);
+        httpSessionEvent.getSession().setAttribute("cart", new Cart());
     }
 
     @Override

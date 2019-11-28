@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.es.phoneshop.cart.ParseIdAndQuantity.getId;
-import static com.es.phoneshop.cart.ParseIdAndQuantity.getQuantity;
+import static com.es.phoneshop.cart.ParseIdClass.getId;
+import static com.es.phoneshop.cart.ParseQuantityClass.getQuantity;
 
 public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
@@ -82,7 +82,7 @@ public class ProductDetailPageServlet extends HttpServlet {
                     request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
                 }
             } catch (OutOfStockException e) {
-                errorMap.addError(idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
+                errorMap.addError("quantity-" + idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
                 request.setAttribute("errorMapForPDP", errorMap);
                 session.setAttribute("cart", cart);
                 showDetailPage(idProduct, request, response);

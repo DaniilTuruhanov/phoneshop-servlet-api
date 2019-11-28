@@ -15,11 +15,6 @@ header img {
     max-width: 64px;
 }
 
-table {
-    border-collapse: collapse;
-    border: 1px solid gray;
-}
-
 td {
     padding: 10px;
     border: 1px solid gray;
@@ -45,23 +40,29 @@ temp:active {
 .product-list {
 }
 
-.cartButton {
-    position: relative;
-    display: inline-block;
-    width: 10em;
-    height: 2.5em;
-    line-height: 2.5em;
-    vertical-align: middle;
-    text-align: center;
-    font-size: large;
-    text-shadow: 0 -1px 1px #777;
-    color: black;
-    border: 2px solid black;
-    border-radius: 5px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-}
-
 .phoneShop {
     margin-left: auto;
 }
+
+.btn btn-primary mb-2 {
+    margin-left: 20px;
+}
+
+.welcome {
+    margin-left: 20px;
+}
+
+.errors {
+    margin-left: 20px;
+}
+
+.rec-products {
+    margin-left: 20px;
+}
+
+.cart-button {
+    margin: 20px;
+}
+
+
+

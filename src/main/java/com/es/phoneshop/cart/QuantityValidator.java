@@ -21,7 +21,7 @@ public class QuantityValidator implements Validator<Pair<String, String>> {
         try {
             int intQuantity = Integer.valueOf(quantity.getKey());
         } catch (NumberFormatException e) {
-            errorMap.addError(quantity.getValue(), "Not a number");
+            errorMap.addError("quantity-" + quantity.getValue(), "Not a number");
         }
     }
 }

@@ -19,7 +19,7 @@ public class Cart implements Serializable {
         totalQuantity = 0;
     }
 
-    public void addToListCartItems(Product product, int quantity) throws OutOfStockException {
+    public void add(Product product, int quantity) throws OutOfStockException {
         CartItem cartItem = new CartItem(product, quantity);
         if (listCartItems.contains(cartItem)) {
             int id = listCartItems.indexOf(cartItem);
@@ -39,20 +39,25 @@ public class Cart implements Serializable {
         }
     }
 
-    public void updateCartItemInListCartItems(Product product, int quantity) throws OutOfStockException {
+    public void update(Product product, int quantity) throws OutOfStockException {
         CartItem cartItem = new CartItem(product, quantity);
         int id = listCartItems.indexOf(cartItem);
-        if (quantity <= product.getStock()) {
-            listCartItems.get(id).setQuantity(quantity);
+        if (quantity == 0) {
+            listCartItems.remove(listCartItems.get(id));
         } else {
-            throw new OutOfStockException(product.getStock());
+            if (quantity <= product.getStock()) {
+                listCartItems.get(id).setQuantity(quantity);
+            } else {
+                throw new OutOfStockException(product.getStock());
+            }
         }
         recalculateTotals();
     }
 
-    public void deleteCartItem(String idProduct) {
+    public void delete(String idProduct) {
         Optional<CartItem> item = listCartItems.stream()
-                .filter(cartItem -> cartItem.getProduct().getId().equals(idProduct)).findAny();
+                .filter(cartItem -> cartItem.getProduct().getId().equals(idProduct))
+                .findAny();
         if (item.isPresent()) {
             listCartItems.remove(item.get());
         }
@@ -62,10 +67,10 @@ public class Cart implements Serializable {
     public void recalculateTotals() {
         totalCost = BigDecimal.valueOf(0);
         totalQuantity = 0;
-        listCartItems.stream()
-                .forEach(cartItem -> totalCost = totalCost.add(cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity()))));
-        listCartItems.stream()
-                .forEach(cartItem -> totalQuantity += cartItem.getQuantity());
+        for (CartItem cartItem : listCartItems) {
+            totalQuantity += cartItem.getQuantity();
+            totalCost = totalCost.add(cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity())));
+        }
     }
 
     public List<CartItem> getListCartItems() {

@@ -9,8 +9,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Locale;
-
 import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertEquals;
 
@@ -28,30 +26,26 @@ public class QuantityValidatorTest {
 
     @Test
     public void setEmptyErrorMapWhenNoException() throws ProductNotFoundException {
-        Locale locale = Locale.US;
         String quantity = "1";
         ErrorMap errorMap = new ErrorMap();
         ErrorMap result = new ErrorMap();
 
-        when(request.getLocale()).thenReturn(locale);
         when(request.getParameter("quantity")).thenReturn(quantity);
 
-        validator.validate(request, response, errorMap);
+        validator.validate(quantity, errorMap);
         assertEquals(errorMap, result);
     }
 
     @Test
     public void setParseExceptionErrorInMapWhenQuantityString() throws ProductNotFoundException {
-        Locale locale = Locale.US;
         String quantity = "a";
         ErrorMap errorMap = new ErrorMap();
         ErrorMap result = new ErrorMap();
         result.addError("quantity", "Not a number!!!");
 
-        when(request.getLocale()).thenReturn(locale);
         when(request.getParameter("quantity")).thenReturn(quantity);
 
-        validator.validate(request, response, errorMap);
+        validator.validate(quantity, errorMap);
         assertEquals(errorMap, result);
     }
 }

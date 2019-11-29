@@ -4,51 +4,54 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <%@ taglib prefix="sort" tagdir="/WEB-INF/tags" %>
-
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 <tags:master pageTitle="Product Page">
-    <p>
+    <p class="welcome">
         Welcome to Expert-Soft training!
     </p>
-    <form>
-        <input name="query" value="${param.query}">
-        <button>Search</button>
+    <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+            <input class="form-control" name="query" value="${param.query}">
+        </div>
+        <button class="btn btn-primary mb-2">Search</button>
     </form>
-    <div style="display: flex; ">
-        <table class="button-action">
+    <div style="display: flex;">
+        <table class="table table-striped table-hover table-sm">
             <thead>
             <tr>
-                <td>Image
-                </td>
-                <td>
+                <th>Image
+                </th>
+                <th>
                     Description
                     <span id="DescribeUP" href="products/sort?query=${param.query}&sort=UP&order=DESCRIPTION">↑</span>
                     <span id="DescribeDOWN"
                           href="products/sort?query=${param.query}&sort=DOWN&order=DESCRIPTION">↓</span>
 
-                </td>
-                <td class="price">
+                </th>
+                <th class="price">
                     Price
                     <span id="PriceUP" href="products/sort?query=${param.query}&sort=UP&order=PRICE">↑</span>
                     <span id="PriceDOWN" href="products/sort?query=${param.query}&sort=DOWN&order=PRICE">↓</span>
-                </td>
+                </th>
             </tr>
             </thead>
             <c:forEach var="product" items="${products}">
                 <tr>
-                    <td>
+                    <th>
                         <img class="product-tile"
                              src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
-                    </td>
-                    <td><a href="products/${product.id}">${product.description}</a></td>
-                    <td class="price">
+                    </th>
+                    <th><a href="products/${product.id}">${product.description}</a></th>
+                    <th class="price">
                         <a href="" onclick="priceHistory();
                                 function priceHistory() {
-                                let a='<h1>PriceHistory</h1>'+
-                                '<h2>${product.description}</h2>'+
-                                '<c:forEach var="priceRecords" items="${product.priceHistory}">'+
-                                '<p> ${priceRecords.data}- ${priceRecords.price}  ${priceRecords.currency.symbol} </p>'+
-                                '</c:forEach>';
+                                let a='<p>Price History</p>'+
+                                '<p>${product.description}</p>'+'<c:forEach var="priceRecords" items="${product.priceHistory}">'+'<p> ${priceRecords.data}-<fmt:formatNumber value="${priceRecords.price}" type="currency" currencySymbol="${priceRecords.currency.getSymbol()}"/> </p>'+'</c:forEach>';
                                 console.log(a);
                                 return document.querySelector('.price-history').innerHTML!==a?
                                 document.querySelector('.price-history').innerHTML=a:
@@ -56,7 +59,7 @@
                                 }; return false"> <fmt:formatNumber value="${product.price}" type="currency"
                                                                     currencySymbol="${product.currency.getSymbol()}"/>
                         </a>
-                    </td>
+                    </th>
                 </tr>
             </c:forEach>
         </table>
@@ -64,13 +67,13 @@
     </div>
     <script>
         function getProduct(product) {
-            return '<td>' +
+            return '<th>' +
                 '<img class="product-tile"' +
                 ' src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/' + product.imageUrl + '">' +
-                '</td>' +
-                '<td><a href=products/' + product.id + '>' + product.description + '</a></td>' +
-                '<td class="price">' +
-                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price +" "+ product.currency + '</span></td>';
+                '</th>' +
+                '<th><a href=products/' + product.id + '>' + product.description + '</a></th>' +
+                '<th class="price">' +
+                '<span class=showPriceHistory href=products/price?id=' + product.id + '>' + product.price + " " + product.currency + '</span></th>';
         }
 
         function sortProducts(url) {

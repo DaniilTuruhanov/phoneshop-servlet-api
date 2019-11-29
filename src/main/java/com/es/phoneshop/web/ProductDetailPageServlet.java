@@ -10,6 +10,7 @@ import com.es.phoneshop.cart.Validator;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.product.ProductService;
+import javafx.util.Pair;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
 
-import static com.es.phoneshop.cart.ParseIdAndQuantity.getId;
-import static com.es.phoneshop.cart.ParseIdAndQuantity.getQuantity;
+import static com.es.phoneshop.cart.ParseString.getId;
+import static com.es.phoneshop.cart.ParseString.getQuantity;
 
 public class ProductDetailPageServlet extends HttpServlet {
     private ProductService productService;
@@ -66,15 +66,15 @@ public class ProductDetailPageServlet extends HttpServlet {
         }
     }
 
-    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void addProductToCart(Validator validator, Cart cart, String idProduct, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String stringQuantity = request.getParameter("quantity");
-        Locale locale = request.getLocale();
         ErrorMap errorMap = new ErrorMap();
         HttpSession session = request.getSession();
-
-        validator.validate(request, response, errorMap);
+        Pair<String, String> pair = new Pair<>(stringQuantity, idProduct);
+        validator.validate(pair, errorMap);
         if (errorMap.getErrorMap().isEmpty()) {
-            int intQuantity = getQuantity(locale, stringQuantity);
+            int intQuantity = getQuantity(stringQuantity);
             try {
                 try {
                     cartService.addCartItem(cart, idProduct, intQuantity);
@@ -83,8 +83,8 @@ public class ProductDetailPageServlet extends HttpServlet {
                     request.getRequestDispatcher("/WEB-INF/pages/errorPage.jsp").forward(request, response);
                 }
             } catch (OutOfStockException e) {
-                errorMap.addError("quantity", "Not enough stock. Stock: " + e.getTotalQuantity());
-                request.setAttribute("errorMap", errorMap);
+                errorMap.addError("quantity-" + idProduct, "Not enough stock. Stock: " + e.getTotalQuantity());
+                request.setAttribute("errorMapForPDP", errorMap);
                 session.setAttribute("cart", cart);
                 showDetailPage(idProduct, request, response);
                 return;
@@ -92,10 +92,11 @@ public class ProductDetailPageServlet extends HttpServlet {
             session.setAttribute("cart", cart);
             response.sendRedirect(request.getRequestURI() + "?success=true");
         } else {
-            request.setAttribute("errorMap", errorMap);
+            request.setAttribute("errorMapForPDP", errorMap);
             session.setAttribute("cart", cart);
             showDetailPage(idProduct, request, response);
         }
+
     }
 
     public ProductService getProductService() {

@@ -8,4 +8,9 @@ public interface CartService {
     Cart getCart(HttpSession session);
 
     void addCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException, OutOfStockException;
+
+    void updateCartItem(Cart cart, String idProduct, int quantity) throws ProductNotFoundException, OutOfStockException;
+
+    void deleteCartItem(Cart cart, String idProduct);
+
 }

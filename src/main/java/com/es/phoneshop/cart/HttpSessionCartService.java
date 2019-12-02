@@ -48,6 +48,11 @@ public class HttpSessionCartService implements CartService {
     public void deleteCartItem(Cart cart, String idProduct) {
         cart.delete(idProduct);
     }
+
+    @Override
+    public void clearCart(Cart cart) {
+        cart.clear();
+    }
 }
 
 

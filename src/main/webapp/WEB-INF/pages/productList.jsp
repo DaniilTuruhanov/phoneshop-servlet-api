@@ -10,7 +10,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-<tags:master pageTitle="Product Page">
+<tags:master pageTitle="Product List Page">
     <p class="welcome">
         Welcome to Expert-Soft training!
     </p>

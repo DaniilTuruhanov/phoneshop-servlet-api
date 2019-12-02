@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class DosFilter implements Filter {
-    DosProtectionService dosProtectionService;
+    private DosProtectionService dosProtectionService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -23,11 +23,11 @@ public class DosFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (dosProtectionService.allowed((HttpServletRequest)servletRequest)){
-            filterChain.doFilter(servletRequest,servletResponse);
+        if (dosProtectionService.allowed((HttpServletRequest) servletRequest)) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        ((HttpServletResponse)servletResponse).sendError(429);
+        ((HttpServletResponse) servletResponse).sendError(429);
     }
 
     @Override

@@ -53,6 +53,17 @@ public class HttpSessionCartService implements CartService {
     public void clearCart(Cart cart) {
         cart.clear();
     }
+
+    @Override
+    public void updateProductsInProductService(Cart cart) {
+        cart.getListCartItems().stream().forEach(cartItem -> {
+            try {
+                Product product = productService.getProduct(cartItem.getProduct().getId());
+                product.setStock(product.getStock() - cartItem.getQuantity());
+            } catch (ProductNotFoundException e) {
+            }
+        });
+    }
 }
 
 

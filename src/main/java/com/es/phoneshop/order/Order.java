@@ -3,19 +3,13 @@ package com.es.phoneshop.order;
 import com.es.phoneshop.cart.Cart;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class Order extends Cart {
     private BigDecimal deliveryCost;
     private BigDecimal subtotal;
-    private String secureId;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String address;
-    private String paymentMethod;
-    private String date;
+    private String id;
+    private OrderCreateForm orderCreateForm;
 
     public Order(Cart cart) {
         this.setListCartItems(cart.getListCartItems());
@@ -37,60 +31,20 @@ public class Order extends Cart {
         this.subtotal = subtotal;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getLastName() {
-        return lastName;
+    public OrderCreateForm getOrderCreateForm() {
+        return orderCreateForm;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getSecureId() {
-        return secureId;
-    }
-
-    public void setSecureId(String secureId) {
-        this.secureId = secureId;
+    public void setOrderCreateForm(OrderCreateForm orderCreateForm) {
+        this.orderCreateForm = orderCreateForm;
     }
 
     @Override
@@ -98,11 +52,11 @@ public class Order extends Cart {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(secureId, order.secureId);
+        return Objects.equals(id, order.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(secureId);
+        return Objects.hash(id);
     }
 }

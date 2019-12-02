@@ -6,7 +6,7 @@ import javafx.util.Pair;
 
 import java.util.regex.Pattern;
 
-public class OrderFieldsValidator implements Validator<Pair<String, String>> {
+public class OrderFieldsValidator implements Validator<OrderCreateForm> {
     private static OrderFieldsValidator orderFieldsValidator;
 
     private OrderFieldsValidator() {
@@ -20,22 +20,28 @@ public class OrderFieldsValidator implements Validator<Pair<String, String>> {
     }
 
     @Override
-    public void validate(Pair<String, String> validateObject, ErrorMap errorMap) {
-        if (validateObject.getKey() == null || validateObject.getKey().trim().equals("")) {
-            errorMap.addError(validateObject.getValue(), validateObject.getValue() + " is required");
-        } else {
-            if (validateObject.getValue().equals("Phone")) {
-                if (Pattern.matches("(.*[a-zA-Zа-яА-Я]+.*)", validateObject.getKey())) {
-                    errorMap.addError(validateObject.getValue(), validateObject.getValue() + " is required");
-                }
+    public void validate(OrderCreateForm validateObject, ErrorMap errorMap) {
+        if (validateObject.getFirstName() == null || validateObject.getFirstName().trim().equals("") || Pattern.matches("(.*[0-9]+.*)", validateObject.getFirstName())) {
+            errorMap.addError("First name", "First name is required");
+        }
+        if (validateObject.getLastName() == null || validateObject.getLastName().trim().equals("") || Pattern.matches("(.*[0-9]+.*)", validateObject.getLastName())) {
+            errorMap.addError("Last name", "Last name is required");
+        }
 
-            } else {
-                if (validateObject.getValue().equals("First name") || validateObject.getValue().equals("Last name")) {
-                    if (Pattern.matches("(.*[0-9]+.*)", validateObject.getKey())) {
-                        errorMap.addError(validateObject.getValue(), validateObject.getValue() + " is required");
-                    }
-                }
-            }
+        if (validateObject.getPhone() == null || validateObject.getPhone().trim().equals("") || Pattern.matches("(.*[a-zA-Zа-яА-Я]+.*)", validateObject.getPhone())) {
+            errorMap.addError("Phone", "Phone is required");
+        }
+
+        if (validateObject.getDate() == null || validateObject.getDate().trim().equals("")) {
+            errorMap.addError("Date", "Date is required");
+        }
+
+        if (validateObject.getPaymentMethod() == null || validateObject.getPaymentMethod().trim().equals("")) {
+            errorMap.addError("Payment Method", "Payment Method is required");
+        }
+
+        if (validateObject.getAddress() == null || validateObject.getAddress().trim().equals("")) {
+            errorMap.addError("Address", "Address is required");
         }
     }
 }

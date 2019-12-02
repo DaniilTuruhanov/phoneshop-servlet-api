@@ -3,6 +3,7 @@ package com.es.phoneshop.order;
 import com.es.phoneshop.model.product.SynchronizeMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,9 +25,9 @@ public class ArrayListOrderDao implements OrderDao {
 
     @Override
     public void saveOrder(Order order) {
-        synchronized (SynchronizeMap.findKey(order.getSecureId())) {
-            if (order.getSecureId() == null) {
-                order.setSecureId(UUID.randomUUID().toString());
+        synchronized (SynchronizeMap.findKey(order.getId())) {
+            if (order.getId() == null) {
+                order.setId(UUID.randomUUID().toString());
                 orders.add(order);
             } else {
                 if (orders.contains(order)) {
@@ -42,7 +43,7 @@ public class ArrayListOrderDao implements OrderDao {
     public Optional<Order> getOrder(String secureId) {
         synchronized (SynchronizeMap.findKey(secureId)) {
             return orders.stream()
-                    .filter(order -> order.getSecureId().equals(secureId))
+                    .filter(order -> order.getId().equals(secureId))
                     .findAny();
         }
     }

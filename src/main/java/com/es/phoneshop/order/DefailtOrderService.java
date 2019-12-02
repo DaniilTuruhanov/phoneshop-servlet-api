@@ -30,14 +30,14 @@ public class DefailtOrderService implements OrderService {
 
     @Override
     public Order getOrder(String secureId) throws OrderNotFoundException {
-        return ArrayListOrderDaoService.getInstance().getOrder(secureId);
+        return ArrayListOrderService.getInstance().getOrder(secureId);
     }
 
     @Override
     public String placeOrder(Order order) {
-        String secureId = UUID.randomUUID().toString();
-        order.setSecureId(secureId);
-        ArrayListOrderDaoService.getInstance().saveOrder(order);
-        return secureId;
+        String id = UUID.randomUUID().toString();
+        order.setId(id);
+        ArrayListOrderService.getInstance().saveOrder(order);
+        return id;
     }
 }

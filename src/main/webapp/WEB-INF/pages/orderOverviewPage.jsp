@@ -54,32 +54,32 @@
     <table class="table table-sm">
         <tr>
             <th>First Name:</th>
-            <th>${order.firstName}</th>
+            <th>${order.orderCreateForm.firstName}</th>
         </tr>
 
         <tr>
             <th>Last Name:</th>
-            <th>${order.lastName}</th>
+            <th>${order.orderCreateForm.lastName}</th>
         </tr>
 
         <tr>
             <th>Phone:</th>
-            <th>${order.phone}</th>
+            <th>${order.orderCreateForm.phone}</th>
         </tr>
 
         <tr>
             <th>Address:</th>
-            <th>${order.address}</th>
+            <th>${order.orderCreateForm.address}</th>
         </tr>
 
         <tr>
             <th>Payment method:</th>
-            <th> ${order.paymentMethod}</th>
+            <th> ${order.orderCreateForm.paymentMethod}</th>
         </tr>
 
         <tr>
             <th>Date:</th>
-            <th>${order.date}</th>
+            <th>${order.orderCreateForm.date}</th>
         </tr>
 
     </table>

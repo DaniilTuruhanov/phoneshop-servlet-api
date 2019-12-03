@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import javafx.util.Pair;
-
 public class CheckoutPageServlet extends HttpServlet {
     private CartService cartService;
     private OrderService orderService;
@@ -69,7 +67,7 @@ public class CheckoutPageServlet extends HttpServlet {
         }
         order.setOrderCreateForm(orderCreateForm);
         String secureId = orderService.placeOrder(order);
-        cartService.updateProductsInProductService(cart);
+        productService.updateProductsInProductService(cart.getListCartItems());
         cartService.clearCart(cart);
         resp.sendRedirect(req.getContextPath() + "/overview/" + secureId);
     }

@@ -64,5 +64,70 @@
                 </c:forEach>
             </table>
         </c:if>
+        <c:if test="${ not empty product.commentArrayList}">
+            <c:forEach var="commentItem" items="${product.commentArrayList}">
+                <table>
+                    <tr>
+                        <th>Name:</th>
+                        <th>
+                                ${commentItem.name}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Rating:</th>
+                        <th>
+                                ${commentItem.rating}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Comment:</th>
+                        <th>
+                                ${commentItem.comment}
+                        </th>
+                    </tr>
+                </table>
+            </br>
+            </c:forEach>
+        </c:if>
+        <form method="post" action="${pageContext.servletContext.contextPath}/products/comment/${product.id}">
+            <table>
+                <h2>Add review form</h2>
+                <tr>
+                    <th>Name:</th>
+                    <th>
+                        <input name="Name" value="${param["Name"]}" required>
+                        <c:if test="${not empty errorMap.get('Name')}">
+                            <c:forEach var="error" items="${errorMap.get('Name')}">
+                                <span style="color: red">${error}</span>
+                            </c:forEach>
+                        </c:if>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Rating:</th>
+                    <th>
+                        <input name="Rating" value="${param["Rating"]}" required pattern="[1-5]">
+                        <c:if test="${not empty errorMap.get('Rating')}">
+                            <c:forEach var="error" items="${errorMap.get('Rating')}">
+                                <span style="color: red">${error}</span>
+                            </c:forEach>
+                        </c:if>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>Comment:</th>
+                    <th>
+                        <input name="Comment" value="${param["Comment"]}" required>
+                        <c:if test="${not empty errorMap.get('Comment')}">
+                            <c:forEach var="error" items="${errorMap.get('Comment')}">
+                                <span style="color: red">${error}</span>
+                            </c:forEach>
+                        </c:if>
+                    </th>
+                </tr>
+            </table>
+            <button>Add</button>
+        </form>
     </div>
 </tags:master>

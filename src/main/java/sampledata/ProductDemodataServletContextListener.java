@@ -4,6 +4,7 @@ import com.es.phoneshop.cart.HttpSessionCartService;
 import com.es.phoneshop.cart.QuantityValidator;
 import com.es.phoneshop.cart.RecentlyViewedProductsService;
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.CommentValidator;
 import com.es.phoneshop.model.product.ProductService;
 import com.es.phoneshop.order.ArrayListOrderService;
 import com.es.phoneshop.order.DefailtOrderService;
@@ -26,6 +27,7 @@ public class ProductDemodataServletContextListener implements ServletContextList
         OrderFieldsValidator.getInstance();
         DefailtOrderService.getInstance();
         DefaultDosProtectionService.getInstance();
+        CommentValidator.getInstance();
     }
 
     public void contextDestroyed(ServletContextEvent sce) {

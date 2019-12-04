@@ -7,6 +7,8 @@ import com.es.phoneshop.cart.OutOfStockException;
 import com.es.phoneshop.cart.QuantityValidator;
 import com.es.phoneshop.cart.RecentlyViewedProductsService;
 import com.es.phoneshop.cart.Validator;
+import com.es.phoneshop.model.product.Comment;
+import com.es.phoneshop.model.product.CommentValidator;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.product.ProductService;
@@ -27,9 +29,11 @@ public class ProductDetailPageServlet extends HttpServlet {
     private HttpSessionCartService cartService;
     private RecentlyViewedProductsService recentlyViewedProductsService;
     private QuantityValidator quantityValidator;
+    private CommentValidator commentValidator;
 
     @Override
     public void init() {
+        commentValidator = CommentValidator.getInstance();
         quantityValidator = QuantityValidator.getInstance();
         recentlyViewedProductsService = RecentlyViewedProductsService.getInstance();
         productService = productService.getInstance();
@@ -48,7 +52,6 @@ public class ProductDetailPageServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String idProduct = getId(request);
         Cart cart = cartService.getCart(session);
-
         addProductToCart(quantityValidator, cart, idProduct, request, response);
     }
 

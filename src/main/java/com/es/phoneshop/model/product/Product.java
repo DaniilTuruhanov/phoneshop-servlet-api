@@ -13,6 +13,7 @@ public class Product implements Serializable {
     public ArrayList<PriceRecord> priceHistory;
     private Currency currency;
     private int stock;
+    private ArrayList<Comment> commentArrayList = new ArrayList<>();
     private String imageUrl;
 
     public Product() {
@@ -29,6 +30,10 @@ public class Product implements Serializable {
         for (PriceRecord s : priceRecords) {
             this.priceHistory.add(s);
         }
+    }
+
+    public void addComment(Comment comment) {
+        commentArrayList.add(comment);
     }
 
     public String getId() {
@@ -85,6 +90,14 @@ public class Product implements Serializable {
 
     public void setPriceHistory(ArrayList<PriceRecord> priceHistory) {
         this.priceHistory = priceHistory;
+    }
+
+    public ArrayList<Comment> getCommentArrayList() {
+        return commentArrayList;
+    }
+
+    public void setCommentArrayList(ArrayList<Comment> commentArrayList) {
+        this.commentArrayList = commentArrayList;
     }
 
     @Override

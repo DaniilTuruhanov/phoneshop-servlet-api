@@ -12,6 +12,9 @@
     <listener>
         <listener-class>sampledata.AddCartHttpSessionListener</listener-class>
     </listener>
+    <welcome-file-list>
+    <welcome-file>/WEB-INF/pages/welcomePage.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>productList</servlet-name>
         <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
@@ -20,6 +23,16 @@
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>commentServlet</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CommentServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>commentServlet</servlet-name>
+        <url-pattern>/products/comment/*</url-pattern>
     </servlet-mapping>
 
     <servlet>

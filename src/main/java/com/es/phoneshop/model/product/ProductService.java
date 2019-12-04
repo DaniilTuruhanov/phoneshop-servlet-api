@@ -1,5 +1,8 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.cart.Cart;
+import com.es.phoneshop.cart.CartItem;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +39,16 @@ public class ProductService {
 
     public List<Product> findProducts() {
         return arrayListProductDao.findProducts(null, null, null);
+    }
+
+    public void updateProductsInProductService(List<CartItem> cartItems) {
+        cartItems.stream().forEach(cartItem -> {
+            try {
+                Product product = productService.getProduct(cartItem.getProduct().getId());
+                product.setStock(product.getStock() - cartItem.getQuantity());
+            } catch (ProductNotFoundException e) {
+            }
+        });
     }
 
     public void save(Product product) {

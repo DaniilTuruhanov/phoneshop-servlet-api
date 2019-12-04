@@ -9,10 +9,15 @@
 </head>
 <body class="product-list" >
 <header >
-    <a href="${pageContext.servletContext.contextPath}">
+    <a href="${pageContext.servletContext.contextPath}/products">
         <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>PhoneShop
     </a>
     <jsp:include page="/minicart"></jsp:include>
+    <form class="cart-button" action="${pageContext.servletContext.contextPath}/checkout">
+        <button style="margin-bottom: 10px" class="btn btn-primary btn-lg">
+            Checkout page
+        </button>
+    </form>
 </header>
 <main>
     <jsp:doBody/>

@@ -64,6 +64,12 @@ public class Cart implements Serializable {
         recalculateTotals();
     }
 
+    public void clear() {
+        listCartItems = new ArrayList<>();
+        totalCost = new BigDecimal(0);
+        totalQuantity = 0;
+    }
+
     public void recalculateTotals() {
         totalCost = BigDecimal.valueOf(0);
         totalQuantity = 0;

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Arrays;
 import java.util.UUID;
@@ -48,7 +47,20 @@ public class ArrayListProductDao implements ProductDao {
     private boolean containsAll(Product product, String query) {
         List<String> queryList = Arrays.asList(query.trim().split(" "));
         return queryList.stream()
-                .anyMatch(queryPart -> Arrays.asList(product.getDescription().split(" ")).contains(queryPart));
+                .anyMatch(queryPart -> product.getDescription().contains(queryPart));
+    }
+
+    private int countWords(Product product, String query) {
+        if (query == null) {
+            return 0;
+        }
+        List<String> queryList = Arrays.asList(query.trim().split(" "));
+        int count = 0;
+        for (String quantity : queryList) {
+            if (product.getDescription().contains(quantity))
+                count++;
+        }
+        return count;
     }
 
     public List<Product> findProducts() {
@@ -93,6 +105,7 @@ public class ArrayListProductDao implements ProductDao {
         List<Product> products = findProducts();
         products = products.stream()
                 .filter(product -> query == null || query.trim().equals("") || containsAll(product, query))
+                .sorted((product1, product2) -> countWords(product2, query) - countWords(product1, query))
                 .collect(Collectors.toList());
         return sortProducts(products, sortByField, upOrDown);
     }

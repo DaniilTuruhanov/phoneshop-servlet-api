@@ -6,14 +6,15 @@
          version="3.1">
 
     <display-name>Phoneshop servlet api training</display-name>
-
     <listener>
         <listener-class>sampledata.ProductDemodataServletContextListener</listener-class>
     </listener>
     <listener>
         <listener-class>sampledata.AddCartHttpSessionListener</listener-class>
     </listener>
-
+    <welcome-file-list>
+    <welcome-file>/WEB-INF/pages/welcomePage.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>productList</servlet-name>
         <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
@@ -22,6 +23,16 @@
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>commentServlet</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CommentServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>commentServlet</servlet-name>
+        <url-pattern>/products/comment/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -54,6 +65,7 @@
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
 
+
     <servlet>
         <servlet-name>deleteCartItem</servlet-name>
         <servlet-class>com.es.phoneshop.web.CartItemDeleteServlet</servlet-class>
@@ -61,7 +73,7 @@
 
     <servlet-mapping>
         <servlet-name>deleteCartItem</servlet-name>
-        <url-pattern>/cart/deleteCartItem/*</url-pattern>
+        <url-pattern>/cart/deleteCartItem</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -74,5 +86,33 @@
         <url-pattern>/minicart</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>chechoutPage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>chechoutPage</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>overview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.OrderOverviewPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>overview</servlet-name>
+        <url-pattern>/overview/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>dosProtectionFilter</filter-name>
+        <filter-class>com.es.phoneshop.filters.DosFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>dosProtectionFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
 </web-app>
 

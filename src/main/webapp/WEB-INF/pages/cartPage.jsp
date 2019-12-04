@@ -10,7 +10,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<tags:master pageTitle="Product Page">
+<tags:master pageTitle="Cart Page">
     <div class="errors">
         <c:if test="${param.successUpdate}">
             <p style="color: green">Update successfully!!!</p>

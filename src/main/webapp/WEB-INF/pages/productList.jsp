@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-
 <%@ taglib prefix="sort" tagdir="/WEB-INF/tags" %>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -51,7 +50,11 @@
                         <a href="" onclick="priceHistory();
                                 function priceHistory() {
                                 let a='<p>Price History</p>'+
-                                '<p>${product.description}</p>'+'<c:forEach var="priceRecords" items="${product.priceHistory}">'+'<p> ${priceRecords.data}-<fmt:formatNumber value="${priceRecords.price}" type="currency" currencySymbol="${priceRecords.currency.getSymbol()}"/> </p>'+'</c:forEach>';
+                                '<p>${product.description}</p>'+'
+                        <c:forEach var="priceRecords" items="${product.priceHistory}">'+'<p> ${priceRecords.data}-
+                            <fmt:formatNumber value="${priceRecords.price}" type="currency"
+                                              currencySymbol="${priceRecords.currency.getSymbol()}"/> </p>'+'
+                        </c:forEach>';
                                 console.log(a);
                                 return document.querySelector('.price-history').innerHTML!==a?
                                 document.querySelector('.price-history').innerHTML=a:
